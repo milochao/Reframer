@@ -1,0 +1,2224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reframer – Phase 1 Prototype v4</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f4;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    
+    .phone-frame {
+      width: 100%;
+      max-width: 390px;
+      background: white;
+      border-radius: 32px;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.2);
+      padding: 24px;
+      min-height: 750px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      flex-shrink: 0;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      border: 2px solid #292524;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+    }
+    
+    .logo-text {
+      font-weight: 600;
+      color: #292524;
+      font-size: 18px;
+    }
+    
+    .screen-label {
+      font-size: 12px;
+      color: #a8a29e;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    /* Progress */
+    .progress {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin-bottom: 24px;
+      flex-shrink: 0;
+    }
+    
+    .progress-dot {
+      height: 6px;
+      width: 6px;
+      border-radius: 3px;
+      background: #e7e5e4;
+      transition: all 0.3s;
+    }
+    
+    .progress-dot.active {
+      width: 28px;
+      background: #292524;
+    }
+    
+    .progress-dot.completed {
+      background: #a8a29e;
+    }
+    
+    /* Content */
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    
+    .screen {
+      display: none;
+    }
+    
+    .screen.active {
+      display: block;
+    }
+    
+    /* Typography */
+    h1 {
+      font-size: 26px;
+      font-weight: 600;
+      color: #292524;
+      text-align: center;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+    
+    h2 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #292524;
+      margin-bottom: 16px;
+    }
+    
+    .subtitle {
+      font-size: 15px;
+      color: #78716c;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    
+    /* Mode selector */
+    .mode-selector {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    
+    .mode-card {
+      flex: 1;
+      padding: 20px 16px;
+      border: 2px solid #e7e5e4;
+      border-radius: 16px;
+      background: white;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    
+    .mode-card:hover {
+      border-color: #292524;
+    }
+    
+    .mode-card.selected {
+      border-color: #292524;
+      background: #fafaf9;
+    }
+    
+    .mode-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 12px;
+      border: 2px solid #292524;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .mode-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: #292524;
+      stroke-width: 2;
+      fill: none;
+    }
+    
+    .mode-title {
+      font-weight: 600;
+      color: #292524;
+      margin-bottom: 4px;
+    }
+    
+    .mode-desc {
+      font-size: 13px;
+      color: #78716c;
+    }
+    
+    /* Form elements */
+    textarea, input[type="text"] {
+      width: 100%;
+      padding: 16px;
+      border: 2px solid #e7e5e4;
+      border-radius: 14px;
+      font-size: 15px;
+      color: #292524;
+      resize: none;
+      transition: border-color 0.2s;
+      font-family: inherit;
+      line-height: 1.5;
+    }
+    
+    textarea:focus, input[type="text"]:focus {
+      outline: none;
+      border-color: #292524;
+    }
+    
+    textarea::placeholder, input::placeholder {
+      color: #a8a29e;
+    }
+    
+    textarea {
+      height: 120px;
+    }
+    
+    label {
+      display: block;
+      font-size: 14px;
+      color: #57534e;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    
+    label span {
+      color: #a8a29e;
+      font-weight: 400;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    /* Reaction grid */
+    .reaction-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    
+    .reaction-btn {
+      padding: 14px 12px;
+      border: 2px solid #e7e5e4;
+      border-radius: 12px;
+      background: white;
+      cursor: pointer;
+      text-align: left;
+      font-size: 14px;
+      color: #292524;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .reaction-btn:hover {
+      border-color: #d6d3d1;
+    }
+    
+    .reaction-btn.selected {
+      border-color: #292524;
+      background: #fafaf9;
+    }
+    
+    .reaction-icon {
+      width: 32px;
+      height: 32px;
+      border: 1.5px solid #292524;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .reaction-icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: #292524;
+      stroke-width: 2;
+      fill: none;
+    }
+    
+    /* Buttons */
+    .btn-primary {
+      width: 100%;
+      padding: 16px;
+      border: 2px solid #292524;
+      border-radius: 14px;
+      background: #292524;
+      color: white;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 16px;
+    }
+    
+    .btn-primary:hover {
+      background: #1c1917;
+    }
+    
+    .btn-primary:disabled {
+      background: #e7e5e4;
+      border-color: #e7e5e4;
+      color: #a8a29e;
+      cursor: not-allowed;
+    }
+    
+    .btn-secondary {
+      padding: 16px 20px;
+      border: 2px solid #e7e5e4;
+      border-radius: 14px;
+      background: white;
+      color: #57534e;
+      font-size: 16px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    
+    .btn-secondary:hover {
+      border-color: #292524;
+    }
+    
+    .btn-outline {
+      width: 100%;
+      padding: 16px;
+      border: 2px solid #292524;
+      border-radius: 14px;
+      background: white;
+      color: #292524;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 10px;
+    }
+    
+    .btn-outline:hover {
+      background: #fafaf9;
+    }
+    
+    .btn-outline:disabled {
+      border-color: #e7e5e4;
+      color: #a8a29e;
+      cursor: not-allowed;
+    }
+    
+    .btn-ghost {
+      width: 100%;
+      padding: 14px;
+      border: 2px dashed #d6d3d1;
+      border-radius: 14px;
+      background: white;
+      color: #78716c;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .btn-ghost:hover {
+      border-color: #292524;
+      color: #292524;
+    }
+    
+    .btn-ghost svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+    }
+    
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    
+    .btn-row .btn-primary,
+    .btn-row .btn-outline {
+      flex: 1;
+      margin-top: 0;
+    }
+    
+    .btn-text {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      background: none;
+      color: #78716c;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+    
+    .btn-text:hover {
+      color: #292524;
+    }
+    
+    /* Cards */
+    .card {
+      padding: 20px;
+      border-radius: 16px;
+      margin-bottom: 14px;
+      border: 2px solid;
+    }
+    
+    .card-default {
+      background: #fafaf9;
+      border-color: #e7e5e4;
+    }
+    
+    .card-highlight {
+      background: white;
+      border-color: #292524;
+    }
+    
+    .card-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 10px;
+      color: #78716c;
+    }
+    
+    .card p {
+      font-size: 15px;
+      color: #292524;
+      line-height: 1.55;
+    }
+    
+    .card p.muted {
+      font-size: 14px;
+      color: #78716c;
+    }
+    
+    /* Technique cards */
+    .technique-card {
+      width: 100%;
+      padding: 20px;
+      border: 2px solid #e7e5e4;
+      border-radius: 16px;
+      background: white;
+      cursor: pointer;
+      text-align: left;
+      margin-bottom: 14px;
+      transition: all 0.2s;
+    }
+    
+    .technique-card:hover {
+      border-color: #292524;
+    }
+    
+    .technique-card.recommended {
+      border-color: #292524;
+      background: #fafaf9;
+    }
+    
+    .technique-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    
+    .technique-meta {
+      font-size: 12px;
+      color: #78716c;
+      margin-bottom: 2px;
+    }
+    
+    .technique-name {
+      font-size: 17px;
+      font-weight: 600;
+      color: #292524;
+    }
+    
+    .technique-score {
+      text-align: right;
+    }
+    
+    .score-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #292524;
+    }
+    
+    .score-label {
+      font-size: 11px;
+      color: #78716c;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .technique-desc {
+      font-size: 14px;
+      color: #57534e;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+    
+    .technique-example {
+      padding: 14px;
+      background: #f5f5f4;
+      border-radius: 10px;
+      font-size: 14px;
+      color: #292524;
+      font-style: italic;
+      margin-bottom: 12px;
+      border-left: 3px solid #292524;
+    }
+    
+    .badge-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      background: #f5f5f4;
+      color: #57534e;
+    }
+    
+    .badge.dark {
+      background: #292524;
+      color: white;
+    }
+    
+    .badge.new {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    
+    /* Reframe options */
+    .reframe-option {
+      width: 100%;
+      padding: 16px;
+      border: 2px solid #e7e5e4;
+      border-radius: 14px;
+      background: white;
+      cursor: pointer;
+      text-align: left;
+      margin-bottom: 10px;
+      transition: all 0.2s;
+      position: relative;
+    }
+    
+    .reframe-option:hover {
+      border-color: #d6d3d1;
+    }
+    
+    .reframe-option.selected {
+      border-color: #292524;
+      background: #fafaf9;
+    }
+    
+    .reframe-checkbox {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 24px;
+      height: 24px;
+      border: 2px solid #d6d3d1;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    
+    .reframe-option.selected .reframe-checkbox {
+      background: #292524;
+      border-color: #292524;
+    }
+    
+    .reframe-checkbox svg {
+      width: 14px;
+      height: 14px;
+      stroke: white;
+      stroke-width: 3;
+      fill: none;
+      opacity: 0;
+    }
+    
+    .reframe-option.selected .reframe-checkbox svg {
+      opacity: 1;
+    }
+    
+    .reframe-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    
+    .reframe-axis {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #78716c;
+    }
+    
+    .reframe-text {
+      font-size: 15px;
+      color: #292524;
+      line-height: 1.5;
+      padding-right: 36px;
+    }
+    
+    .selection-count {
+      text-align: center;
+      font-size: 14px;
+      color: #78716c;
+      margin-bottom: 16px;
+    }
+    
+    .selection-count strong {
+      color: #292524;
+    }
+    
+    /* Testing */
+    .testing-container {
+      text-align: center;
+      padding: 40px 20px;
+    }
+    
+    .testing-spinner {
+      width: 56px;
+      height: 56px;
+      border: 3px solid #e7e5e4;
+      border-top-color: #292524;
+      border-radius: 50%;
+      margin: 0 auto 24px;
+      animation: spin 0.8s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .testing-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #292524;
+      margin-bottom: 8px;
+    }
+    
+    .testing-subtitle {
+      font-size: 14px;
+      color: #78716c;
+      margin-bottom: 32px;
+    }
+    
+    .testing-items {
+      text-align: left;
+      max-width: 280px;
+      margin: 0 auto;
+    }
+    
+    .testing-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #e7e5e4;
+      font-size: 14px;
+      color: #78716c;
+    }
+    
+    .testing-item:last-child {
+      border-bottom: none;
+    }
+    
+    .testing-item.done {
+      color: #292524;
+    }
+    
+    .testing-item-icon {
+      width: 24px;
+      height: 24px;
+      border: 2px solid currentColor;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .testing-item.done .testing-item-icon {
+      background: #292524;
+      border-color: #292524;
+    }
+    
+    .testing-item-icon svg {
+      width: 12px;
+      height: 12px;
+      stroke: white;
+      stroke-width: 3;
+      fill: none;
+    }
+    
+    /* Results */
+    .results-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    .results-audience {
+      font-size: 13px;
+      color: #78716c;
+      margin-top: 4px;
+    }
+    
+    .result-card {
+      padding: 20px;
+      border: 2px solid #e7e5e4;
+      border-radius: 16px;
+      margin-bottom: 12px;
+      background: white;
+    }
+    
+    .result-card.winner {
+      border-color: #292524;
+      background: #fafaf9;
+    }
+    
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    
+    .result-rank {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .rank-badge {
+      width: 28px;
+      height: 28px;
+      border: 2px solid #292524;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: #292524;
+    }
+    
+    .result-card.winner .rank-badge {
+      background: #292524;
+      color: white;
+    }
+    
+    .result-axis {
+      font-size: 15px;
+      font-weight: 600;
+      color: #292524;
+    }
+    
+    .result-score {
+      text-align: right;
+    }
+    
+    .result-score-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: #292524;
+    }
+    
+    .result-score-label {
+      font-size: 11px;
+      color: #78716c;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .result-text {
+      font-size: 14px;
+      color: #57534e;
+      line-height: 1.5;
+      margin-bottom: 16px;
+      padding: 14px;
+      background: #f5f5f4;
+      border-radius: 10px;
+      border-left: 3px solid #292524;
+    }
+    
+    .result-card.winner .result-text {
+      background: white;
+    }
+    
+    .result-metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    
+    .metric {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      padding: 8px 12px;
+      background: #f5f5f4;
+      border-radius: 8px;
+    }
+    
+    .result-card.winner .metric {
+      background: white;
+    }
+    
+    .metric-label {
+      color: #78716c;
+    }
+    
+    .metric-value {
+      font-weight: 600;
+      color: #292524;
+    }
+    
+    .winner-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: #292524;
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 6px;
+      margin-bottom: 12px;
+    }
+    
+    .result-card.collapsed {
+      padding: 16px 20px;
+    }
+    
+    .result-card.collapsed .result-text,
+    .result-card.collapsed .result-metrics {
+      display: none;
+    }
+    
+    .result-card.collapsed .result-header {
+      margin-bottom: 0;
+    }
+    
+    /* Final screen */
+    .success-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      border: 2px solid #292524;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+    
+    .success-icon svg {
+      width: 32px;
+      height: 32px;
+      stroke: #292524;
+      stroke-width: 2.5;
+      fill: none;
+    }
+    
+    .final-reframe {
+      padding: 24px 20px;
+      background: #fafaf9;
+      border: 2px solid #292524;
+      border-radius: 16px;
+      margin-bottom: 16px;
+    }
+    
+    .final-reframe p {
+      font-size: 17px;
+      color: #292524;
+      line-height: 1.6;
+    }
+    
+    .summary-card {
+      padding: 16px;
+      background: #fafaf9;
+      border: 1px solid #e7e5e4;
+      border-radius: 12px;
+      margin-bottom: 16px;
+    }
+    
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #e7e5e4;
+    }
+    
+    .summary-row:last-child {
+      border-bottom: none;
+    }
+    
+    .summary-label {
+      font-size: 13px;
+      color: #78716c;
+    }
+    
+    .summary-value {
+      font-size: 13px;
+      color: #292524;
+      font-weight: 500;
+      text-align: right;
+    }
+    
+    .action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    
+    .action-btn {
+      padding: 14px 10px;
+      border: 2px solid #e7e5e4;
+      border-radius: 12px;
+      background: white;
+      cursor: pointer;
+      font-size: 13px;
+      color: #57534e;
+      transition: border-color 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .action-btn:hover {
+      border-color: #292524;
+    }
+    
+    .action-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: #292524;
+      stroke-width: 2;
+      fill: none;
+    }
+    
+    /* ========== LEARNING MODE ========== */
+    
+    /* Learn navigation */
+    .learn-nav {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    
+    .learn-nav-btn {
+      padding: 10px 16px;
+      border: 2px solid #e7e5e4;
+      border-radius: 10px;
+      background: white;
+      font-size: 14px;
+      font-weight: 500;
+      color: #57534e;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    
+    .learn-nav-btn:hover {
+      border-color: #292524;
+    }
+    
+    .learn-nav-btn.active {
+      background: #292524;
+      border-color: #292524;
+      color: white;
+    }
+    
+    /* Family list */
+    .family-card {
+      padding: 16px;
+      border: 2px solid #e7e5e4;
+      border-radius: 14px;
+      background: white;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .family-card:hover {
+      border-color: #292524;
+    }
+    
+    .family-info {
+      flex: 1;
+    }
+    
+    .family-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #292524;
+      margin-bottom: 4px;
+    }
+    
+    .family-count {
+      font-size: 13px;
+      color: #78716c;
+    }
+    
+    .family-arrow {
+      width: 24px;
+      height: 24px;
+      stroke: #a8a29e;
+      stroke-width: 2;
+      fill: none;
+    }
+    
+    /* Technique list in family */
+    .tech-list-item {
+      padding: 14px 16px;
+      border: 2px solid #e7e5e4;
+      border-radius: 12px;
+      background: white;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .tech-list-item:hover {
+      border-color: #292524;
+    }
+    
+    .tech-list-name {
+      font-size: 15px;
+      font-weight: 500;
+      color: #292524;
+      margin-bottom: 4px;
+    }
+    
+    .tech-list-desc {
+      font-size: 13px;
+      color: #78716c;
+      line-height: 1.4;
+    }
+    
+    /* Flashcard */
+    .flashcard-container {
+      perspective: 1000px;
+      margin-bottom: 24px;
+    }
+    
+    .flashcard {
+      width: 100%;
+      min-height: 280px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.5s;
+      cursor: pointer;
+    }
+    
+    .flashcard.flipped {
+      transform: rotateY(180deg);
+    }
+    
+    .flashcard-face {
+      position: absolute;
+      width: 100%;
+      min-height: 280px;
+      backface-visibility: hidden;
+      border: 2px solid #292524;
+      border-radius: 20px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .flashcard-front {
+      background: white;
+    }
+    
+    .flashcard-back {
+      background: #fafaf9;
+      transform: rotateY(180deg);
+    }
+    
+    .flashcard-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #78716c;
+      margin-bottom: 16px;
+    }
+    
+    .flashcard-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: #292524;
+      margin-bottom: 8px;
+    }
+    
+    .flashcard-family {
+      font-size: 14px;
+      color: #78716c;
+      margin-bottom: 16px;
+    }
+    
+    .flashcard-content {
+      font-size: 15px;
+      color: #292524;
+      line-height: 1.6;
+      flex: 1;
+    }
+    
+    .flashcard-hint {
+      font-size: 13px;
+      color: #a8a29e;
+      text-align: center;
+      margin-top: 16px;
+    }
+    
+    .flashcard-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .flashcard-nav-btn {
+      width: 48px;
+      height: 48px;
+      border: 2px solid #e7e5e4;
+      border-radius: 12px;
+      background: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s;
+    }
+    
+    .flashcard-nav-btn:hover {
+      border-color: #292524;
+    }
+    
+    .flashcard-nav-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: #292524;
+      stroke-width: 2;
+      fill: none;
+    }
+    
+    .flashcard-progress {
+      font-size: 14px;
+      color: #78716c;
+    }
+    
+    .flashcard-progress strong {
+      color: #292524;
+    }
+    
+    /* Case study card */
+    .case-card {
+      border: 2px solid #e7e5e4;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 14px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    
+    .case-card:hover {
+      border-color: #292524;
+    }
+    
+    .case-header {
+      padding: 16px;
+      background: #fafaf9;
+      border-bottom: 1px solid #e7e5e4;
+    }
+    
+    .case-industry {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #78716c;
+      margin-bottom: 4px;
+    }
+    
+    .case-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #292524;
+    }
+    
+    .case-body {
+      padding: 16px;
+    }
+    
+    .case-before-after {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    
+    .case-column {
+      font-size: 13px;
+    }
+    
+    .case-column-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #78716c;
+      margin-bottom: 6px;
+    }
+    
+    .case-column-text {
+      color: #292524;
+      line-height: 1.4;
+    }
+    
+    .case-technique {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #e7e5e4;
+      font-size: 13px;
+    }
+    
+    .case-technique-label {
+      color: #78716c;
+    }
+    
+    .case-technique-name {
+      font-weight: 600;
+      color: #292524;
+    }
+    
+    /* Helpers */
+    .text-center {
+      text-align: center;
+    }
+    
+    .mb-8 { margin-bottom: 8px; }
+    .mb-16 { margin-bottom: 16px; }
+    .mb-24 { margin-bottom: 24px; }
+    .mt-16 { margin-top: 16px; }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <!-- Header -->
+    <div class="header">
+      <div class="logo">
+        <div class="logo-icon">R</div>
+        <span class="logo-text">Reframer</span>
+      </div>
+      <span class="screen-label" id="screenLabel">Start</span>
+    </div>
+    
+    <!-- Progress -->
+    <div class="progress" id="progressBar">
+      <div class="progress-dot" id="dot0"></div>
+      <div class="progress-dot" id="dot1"></div>
+      <div class="progress-dot" id="dot2"></div>
+      <div class="progress-dot" id="dot3"></div>
+      <div class="progress-dot" id="dot4"></div>
+      <div class="progress-dot" id="dot5"></div>
+    </div>
+    
+    <!-- Content -->
+    <div class="content">
+      
+      <!-- Screen 0: Mode Selection -->
+      <div class="screen active" id="screen0">
+        <h1>How can I help?</h1>
+        <p class="subtitle">Choose your path.</p>
+        
+        <div class="mode-selector">
+          <div class="mode-card selected" id="modeDiagnose" onclick="selectMode('diagnose')">
+            <div class="mode-icon">
+              <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <div class="mode-title">Diagnose</div>
+            <div class="mode-desc">Fix a stuck message</div>
+          </div>
+          <div class="mode-card" id="modeLearn" onclick="selectMode('learn')">
+            <div class="mode-icon">
+              <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            </div>
+            <div class="mode-title">Learn</div>
+            <div class="mode-desc">Explore techniques</div>
+          </div>
+        </div>
+        
+        <button class="btn-primary" onclick="startMode()">Continue →</button>
+      </div>
+      
+      <!-- Screen 1: Intake -->
+      <div class="screen" id="screen1">
+        <h1>What's not landing?</h1>
+        <p class="subtitle">Paste the message that isn't working.</p>
+        
+        <div class="form-group">
+          <textarea id="messageInput" placeholder="e.g., 'You need to update your process to stay compliant with new regulations...'"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label>Who's it for? <span>(optional)</span></label>
+          <input type="text" id="audienceInput" placeholder="e.g., 'Operations managers at mid-size companies'">
+        </div>
+        
+        <div class="form-group">
+          <label>What happens when they hear it?</label>
+          <div class="reaction-grid">
+            <button class="reaction-btn" data-reaction="confusion" data-cause="confusion">
+              <div class="reaction-icon">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </div>
+              <span>They don't get it</span>
+            </button>
+            <button class="reaction-btn" data-reaction="fear" data-cause="fear_risk">
+              <div class="reaction-icon">
+                <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </div>
+              <span>They seem worried</span>
+            </button>
+            <button class="reaction-btn" data-reaction="pushback" data-cause="fairness_blame">
+              <div class="reaction-icon">
+                <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </div>
+              <span>They push back</span>
+            </button>
+            <button class="reaction-btn" data-reaction="defensive" data-cause="identity_threat">
+              <div class="reaction-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </div>
+              <span>They get defensive</span>
+            </button>
+            <button class="reaction-btn" data-reaction="ignore" data-cause="low_motivation">
+              <div class="reaction-icon">
+                <svg viewBox="0 0 24 24"><path d="M17 18a5 5 0 0 0-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="23" y1="22" x2="1" y2="22"/><polyline points="8 6 12 2 16 6"/></svg>
+              </div>
+              <span>They ignore it</span>
+            </button>
+            <button class="reaction-btn" data-reaction="mismatch" data-cause="narrative_mismatch">
+              <div class="reaction-icon">
+                <svg viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+              </div>
+              <span>It doesn't land</span>
+            </button>
+          </div>
+        </div>
+        
+        <button class="btn-primary" id="btnAnalyze" disabled onclick="analyzeMessage()">Analyze →</button>
+      </div>
+      
+      <!-- Screen 1b: Analyzing -->
+      <div class="screen" id="screen1b">
+        <div class="testing-container">
+          <div class="testing-spinner"></div>
+          <p class="testing-title">Analyzing your message</p>
+          <p class="testing-subtitle">Finding the root cause...</p>
+        </div>
+      </div>
+      
+      <!-- Screen 2: Diagnosis -->
+      <div class="screen" id="screen2">
+        <h1>Here's what I'm seeing</h1>
+        
+        <div class="card card-default">
+          <div class="card-label">Root Cause</div>
+          <p id="diagnosisRootCause">Loading...</p>
+        </div>
+        
+        <div class="card card-highlight">
+          <div class="card-label">The Unlock</div>
+          <p id="diagnosisInsight">Loading...</p>
+        </div>
+        
+        <div class="card card-default">
+          <div class="card-label">Your Message</div>
+          <p class="muted" id="echoMessage">"..."</p>
+        </div>
+        
+        <div class="btn-row">
+          <button class="btn-secondary" onclick="goToScreen(1)">←</button>
+          <button class="btn-primary" onclick="goToScreen(3)">Show techniques →</button>
+        </div>
+      </div>
+      
+      <!-- Screen 3: Technique Selection -->
+      <div class="screen" id="screen3">
+        <h1>Recommended Techniques</h1>
+        <p class="subtitle">Ranked by fit score.</p>
+        
+        <div id="techniqueCards"></div>
+        
+        <button class="btn-ghost" onclick="goToScreen('3b')">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          Browse all 58 techniques
+        </button>
+        
+        <button class="btn-text" onclick="goToScreen(2)">← Back to diagnosis</button>
+      </div>
+      
+      <!-- Screen 3b: Technique Browser -->
+      <div class="screen" id="screen3b">
+        <h1>All Techniques</h1>
+        <p class="subtitle">58 techniques across 9 families.</p>
+        
+        <div id="familyList"></div>
+        
+        <button class="btn-text" onclick="goToScreen(3)">← Back to recommended</button>
+      </div>
+      
+      <!-- Screen 3c: Family Detail -->
+      <div class="screen" id="screen3c">
+        <h2 id="familyDetailTitle">Family Name</h2>
+        
+        <div id="familyTechList"></div>
+        
+        <button class="btn-text" onclick="goToScreen('3b')">← Back to families</button>
+      </div>
+      
+      <!-- Screen 4: Reframe Selection -->
+      <div class="screen" id="screen4">
+        <h1>Select reframes to test</h1>
+        <p class="subtitle">Choose as many as you want.</p>
+        
+        <div class="mb-16">
+          <span class="badge dark" id="selectedTechniqueBadge">Identity Invitation</span>
+        </div>
+        
+        <div class="selection-count">
+          <strong id="selectionCount">0</strong> selected
+        </div>
+        
+        <div id="reframeOptions"></div>
+        
+        <button class="btn-ghost" onclick="generateMoreReframes()">
+          <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+          Generate more options
+        </button>
+        
+        <button class="btn-primary" id="btnTest" disabled onclick="runTest()">Test with synthetic audience</button>
+        <button class="btn-outline" id="btnSkipTest" disabled onclick="skipTest()">Use selected without testing</button>
+        
+        <button class="btn-text" onclick="goToScreen(3)">← Back to techniques</button>
+      </div>
+      
+      <!-- Screen 4b: Testing -->
+      <div class="screen" id="screen4b">
+        <div class="testing-container">
+          <div class="testing-spinner"></div>
+          <p class="testing-title">Testing with synthetic audience</p>
+          <p class="testing-subtitle" id="testingAudience">Operations managers</p>
+          
+          <div class="testing-items" id="testingItems"></div>
+        </div>
+      </div>
+      
+      <!-- Screen 5: Results -->
+      <div class="screen" id="screen5">
+        <div class="results-header">
+          <h1>Results</h1>
+          <p class="results-audience">Tested against: <span id="resultsAudience">Operations managers</span></p>
+        </div>
+        
+        <div id="resultCards"></div>
+        
+        <div class="btn-row">
+          <button class="btn-outline" onclick="goToScreen(4)">Try new ones</button>
+          <button class="btn-primary" onclick="useWinner()">Use winner →</button>
+        </div>
+      </div>
+      
+      <!-- Screen 6: Final -->
+      <div class="screen" id="screen6">
+        <div class="success-header">
+          <div class="success-icon">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h1>Your New Frame</h1>
+        </div>
+        
+        <div class="final-reframe">
+          <p id="finalReframe">"..."</p>
+        </div>
+        
+        <div class="summary-card">
+          <div class="summary-row">
+            <span class="summary-label">Root Cause</span>
+            <span class="summary-value" id="summaryRootCause">Identity Threat</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Technique</span>
+            <span class="summary-value" id="summaryTechnique">Identity Invitation</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Angle</span>
+            <span class="summary-value" id="summaryAngle">Social Proof</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Test Score</span>
+            <span class="summary-value" id="summaryScore">84%</span>
+          </div>
+        </div>
+        
+        <div class="action-grid">
+          <button class="action-btn">
+            <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy
+          </button>
+          <button class="action-btn">
+            <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Save
+          </button>
+          <button class="action-btn">
+            <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            Share
+          </button>
+        </div>
+        
+        <button class="btn-primary" onclick="resetApp()">Start new diagnosis</button>
+        <button class="btn-text" onclick="goToScreen(7)">Learn more about this technique →</button>
+      </div>
+      
+      <!-- ========== LEARNING MODE SCREENS ========== -->
+      
+      <!-- Screen 7: Learn Home -->
+      <div class="screen" id="screen7">
+        <h1>Learn</h1>
+        <p class="subtitle">Master the 58 techniques.</p>
+        
+        <div class="learn-nav">
+          <button class="learn-nav-btn active" onclick="setLearnTab('browse')">Browse</button>
+          <button class="learn-nav-btn" onclick="setLearnTab('flashcards')">Flashcards</button>
+          <button class="learn-nav-btn" onclick="setLearnTab('cases')">Case Studies</button>
+        </div>
+        
+        <!-- Browse Tab -->
+        <div id="learnBrowse">
+          <div id="learnFamilyList"></div>
+        </div>
+        
+        <!-- Flashcards Tab -->
+        <div id="learnFlashcards" style="display:none;">
+          <div class="flashcard-container">
+            <div class="flashcard" id="flashcard" onclick="flipCard()">
+              <div class="flashcard-face flashcard-front">
+                <div class="flashcard-label">When to use</div>
+                <div class="flashcard-title" id="flashcardTitle">Valence Switching</div>
+                <div class="flashcard-family" id="flashcardFamily">Wording & Labeling</div>
+                <div class="flashcard-content" id="flashcardWhen">Use when wording feels harsh, negative, or stigmatizing and the facts do not need to change.</div>
+                <div class="flashcard-hint">Tap to see definition</div>
+              </div>
+              <div class="flashcard-face flashcard-back">
+                <div class="flashcard-label">Definition</div>
+                <div class="flashcard-title" id="flashcardTitleBack">Valence Switching</div>
+                <div class="flashcard-content" id="flashcardDef">Swap negative wording for neutral or positive wording while preserving the underlying reality.</div>
+                <div class="flashcard-hint">Tap to flip back</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="flashcard-nav">
+            <button class="flashcard-nav-btn" onclick="prevCard()">
+              <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <div class="flashcard-progress">
+              <strong id="cardIndex">1</strong> of <span id="cardTotal">58</span>
+            </div>
+            <button class="flashcard-nav-btn" onclick="nextCard()">
+              <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Case Studies Tab -->
+        <div id="learnCases" style="display:none;">
+          <div class="case-card" onclick="showCaseDetail(0)">
+            <div class="case-header">
+              <div class="case-industry">Healthcare</div>
+              <div class="case-title">Reducing patient no-shows</div>
+            </div>
+            <div class="case-body">
+              <div class="case-before-after">
+                <div class="case-column">
+                  <div class="case-column-label">Before</div>
+                  <div class="case-column-text">"Missing appointments costs us $200 per slot."</div>
+                </div>
+                <div class="case-column">
+                  <div class="case-column-label">After</div>
+                  <div class="case-column-text">"We've reserved this time just for you."</div>
+                </div>
+              </div>
+              <div class="case-technique">
+                <span class="case-technique-label">Technique: </span>
+                <span class="case-technique-name">Identity Invitation</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="case-card" onclick="showCaseDetail(1)">
+            <div class="case-header">
+              <div class="case-industry">SaaS</div>
+              <div class="case-title">Increasing trial conversions</div>
+            </div>
+            <div class="case-body">
+              <div class="case-before-after">
+                <div class="case-column">
+                  <div class="case-column-label">Before</div>
+                  <div class="case-column-text">"Your trial expires in 3 days."</div>
+                </div>
+                <div class="case-column">
+                  <div class="case-column-label">After</div>
+                  <div class="case-column-text">"You're 80% through setup. Finish to keep your work."</div>
+                </div>
+              </div>
+              <div class="case-technique">
+                <span class="case-technique-label">Technique: </span>
+                <span class="case-technique-name">Relative Progress</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="case-card" onclick="showCaseDetail(2)">
+            <div class="case-header">
+              <div class="case-industry">Finance</div>
+              <div class="case-title">Explaining fee structures</div>
+            </div>
+            <div class="case-body">
+              <div class="case-before-after">
+                <div class="case-column">
+                  <div class="case-column-label">Before</div>
+                  <div class="case-column-text">"There's a 2.5% annual management fee."</div>
+                </div>
+                <div class="case-column">
+                  <div class="case-column-label">After</div>
+                  <div class="case-column-text">"For every $100 you invest, $2.50 goes to management — the rest works for you."</div>
+                </div>
+              </div>
+              <div class="case-technique">
+                <span class="case-technique-label">Technique: </span>
+                <span class="case-technique-name">Everyday Units</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <button class="btn-primary mt-16" onclick="goToScreen(0)">← Back to start</button>
+      </div>
+      
+      <!-- Screen 7b: Family Detail (Learn) -->
+      <div class="screen" id="screen7b">
+        <h2 id="learnFamilyTitle">Family Name</h2>
+        
+        <div id="learnTechList"></div>
+        
+        <button class="btn-text" onclick="goToScreen(7)">← Back to learn</button>
+      </div>
+      
+      <!-- Screen 7c: Technique Detail (Learn) -->
+      <div class="screen" id="screen7c">
+        <div class="mb-16">
+          <span class="badge" id="techDetailFamily">Family</span>
+        </div>
+        
+        <h2 id="techDetailName">Technique Name</h2>
+        
+        <div class="card card-default">
+          <div class="card-label">When to use</div>
+          <p id="techDetailWhen">...</p>
+        </div>
+        
+        <div class="card card-highlight">
+          <div class="card-label">Definition</div>
+          <p id="techDetailDef">...</p>
+        </div>
+        
+        <div class="card card-default">
+          <div class="card-label">Example</div>
+          <p id="techDetailExample">...</p>
+        </div>
+        
+        <button class="btn-primary" onclick="useTechniqueFromLearn()">Use this technique →</button>
+        <button class="btn-text" onclick="goToScreen('7b')">← Back to family</button>
+      </div>
+      
+    </div>
+  </div>
+
+  <script>
+    // State
+    let currentScreen = 0;
+    let selectedMode = 'diagnose';
+    let selectedReaction = null;
+    let selectedRootCause = null;
+    let selectedTechnique = null;
+    let selectedReframes = [];
+    let allReframes = [];
+    let generatedCount = 0;
+    let testResults = [];
+    let winnerReframe = null;
+    let currentLearnTab = 'browse';
+    let currentCardIndex = 0;
+    let currentFamilyId = null;
+    let currentTechDetail = null;
+    
+    // Families
+    const families = [
+      { id: 'wl', name: 'Wording & Labeling', count: 9 },
+      { id: 'qs', name: 'Quantity & Scale', count: 8 },
+      { id: 'cc', name: 'Contrast & Comparison', count: 7 },
+      { id: 'cr', name: 'Causality & Responsibility', count: 7 },
+      { id: 'is', name: 'Identity & Social Norms', count: 7 },
+      { id: 'ns', name: 'Narrative Structure', count: 8 },
+      { id: 'mc', name: 'Metaphor & Conceptual Frame', count: 8 },
+      { id: 'tu', name: 'Time & Uncertainty', count: 4 }
+    ];
+    
+    // All techniques (sample)
+    const allTechniques = [
+      { id: 'WL01', name: 'Valence Switching', family: 'Wording & Labeling', familyId: 'wl', when: 'Use when wording feels harsh, negative, or stigmatizing and the facts do not need to change.', def: 'Swap negative wording for neutral or positive wording while preserving the underlying reality.' },
+      { id: 'WL02', name: 'Polarity Inversion', family: 'Wording & Labeling', familyId: 'wl', when: 'Use when the same outcome can be truthfully framed as either a gain or a loss.', def: 'Re-express a loss as a gain or vice versa to shift perception.' },
+      { id: 'WL03', name: 'Survival Framing', family: 'Wording & Labeling', familyId: 'wl', when: 'Use when negative outcome framing is triggering fear or avoidance.', def: 'Present positive survival or success rates instead of negative failure or death rates.' },
+      { id: 'WL06', name: 'Plain Language Translation', family: 'Wording & Labeling', familyId: 'wl', when: 'Use when jargon or complexity is confusing the audience.', def: 'Replace technical or abstract language with simple everyday wording.' },
+      { id: 'QS01', name: 'Percentage vs Frequency', family: 'Quantity & Scale', familyId: 'qs', when: 'Use when percentages feel abstract or difficult to visualize.', def: 'Convert percentages into frequencies such as "X out of Y people".' },
+      { id: 'QS05', name: 'Everyday Units', family: 'Quantity & Scale', familyId: 'qs', when: 'Use when units are unfamiliar or abstract.', def: 'Translate measurements into relatable everyday equivalents such as miles driven or cups of coffee.' },
+      { id: 'CC07', name: 'Relative Progress', family: 'Contrast & Comparison', familyId: 'cc', when: 'Use when people feel stuck or unmotivated.', def: 'Show how close they are to a goal or how much progress they have already made.' },
+      { id: 'CR01', name: 'System vs Individual Causality', family: 'Causality & Responsibility', familyId: 'cr', when: 'Use when individuals are being blamed for systemic issues.', def: 'Shift explanation from individual actions to system level causes.' },
+      { id: 'IS01', name: 'Identity Invitation', family: 'Identity & Social Norms', familyId: 'is', when: 'Use when the behavior aligns with a desirable identity.', def: 'Invite the audience into a positive identity that matches the behavior.' },
+      { id: 'NS02', name: 'Hero Change', family: 'Narrative Structure', familyId: 'ns', when: 'Use when the story centers on the brand or system instead of the audience.', def: 'Shift the hero role to the user or community.' },
+      { id: 'NS04', name: 'Plot Arc', family: 'Narrative Structure', familyId: 'ns', when: 'Use when the experience feels flat or static.', def: 'Show how the audience moves from one state to a better state.' },
+      { id: 'MC06', name: 'Investment Frame', family: 'Metaphor & Conceptual Frame', familyId: 'mc', when: 'Use when costs feel like losses but create future value.', def: 'Present contributions as investments in later benefit.' },
+      { id: 'TU03', name: 'Certainty Emphasis', family: 'Time & Uncertainty', familyId: 'tu', when: 'Use when people feel everything is uncertain.', def: 'Clarify what is fixed and predictable.' }
+    ];
+    
+    // Root causes & techniques (same as before, abbreviated)
+    const rootCauses = {
+      confusion: { label: "Confusion / Abstraction", diagnosis: "The message is too abstract or jargon-heavy. The audience can't visualize what you're asking them to do or why it matters.", insight: "When people can't see it, they can't act on it. Translate abstract concepts into concrete, everyday language." },
+      fear_risk: { label: "Fear / Perceived Risk", diagnosis: "The message emphasizes what could go wrong, triggering loss aversion.", insight: "Fear freezes action. Reframe to emphasize safety, certainty, or what they preserve." },
+      fairness_blame: { label: "Fairness / Blame", diagnosis: "The message implies fault or creates a sense of unfairness.", insight: "Nobody changes when they feel blamed. Shift responsibility to the system or shared circumstances." },
+      identity_threat: { label: "Identity Threat", diagnosis: "The message implies the audience is doing something wrong or is behind.", insight: "People accept change more easily when they see themselves as smart early adopters, not late correctors." },
+      low_motivation: { label: "Low Motivation", diagnosis: "The message doesn't connect to anything the audience cares about.", insight: "Motivation comes from meaning. Connect the ask to their existing goals, values, or identity." },
+      narrative_mismatch: { label: "Narrative Mismatch", diagnosis: "The story structure doesn't resonate. The audience doesn't see themselves in the narrative.", insight: "Every message is a story. Make sure they're the hero." }
+    };
+    
+    const techniques = {
+      identity_threat: [
+        { id: "IS01", name: "Identity Invitation", family: "Identity & Social Norms", score: 87, description: "Invite the audience into a positive identity that matches the desired behavior.", example: "Join the growing number of forward-thinking teams who've made the switch...", reframes: [
+          { axis: "Social Proof", text: "Join the growing number of teams who've already made the switch to real-time collaboration." },
+          { axis: "Aspiration", text: "Forward-thinking managers are discovering a faster way to stay aligned." },
+          { axis: "Validation", text: "The smartest teams we work with started asking the same question you're asking now." },
+          { axis: "Evolution", text: "You've built a solid foundation. Here's how leading teams are taking it to the next level." }
+        ]},
+        { id: "NS04", name: "Plot Arc", family: "Narrative Structure", score: 71, description: "Frame the change as natural evolution, not correction.", example: "You've built a solid foundation. Here's how to take it further...", reframes: [
+          { axis: "Progress", text: "You've come a long way. This is the next step in that journey." },
+          { axis: "Opportunity", text: "What worked yesterday still works — but now there's something even better." },
+          { axis: "Timing", text: "The foundation is set. Now is the right time to build on it." },
+          { axis: "Growth", text: "This isn't about fixing what's broken. It's about unlocking what's next." }
+        ]}
+      ],
+      confusion: [
+        { id: "WL06", name: "Plain Language Translation", family: "Wording & Labeling", score: 84, description: "Replace technical or abstract language with simple everyday wording.", example: "Instead of 'optimize your workflow,' say 'get more done in less time.'", reframes: [
+          { axis: "Everyday Words", text: "Get more done in less time — without adding more meetings." },
+          { axis: "Concrete Action", text: "See all your projects in one place. Update them with one click." },
+          { axis: "Familiar Comparison", text: "Think of it like a shared to-do list that updates itself." },
+          { axis: "Benefit First", text: "Less time hunting for information. More time doing the actual work." }
+        ]},
+        { id: "QS05", name: "Everyday Units", family: "Quantity & Scale", score: 68, description: "Translate abstract measurements into relatable equivalents.", example: "That's about the time it takes to make a cup of coffee.", reframes: [
+          { axis: "Time Familiar", text: "Takes about as long as making a cup of coffee." },
+          { axis: "Money Tangible", text: "Costs less than your monthly streaming subscription." },
+          { axis: "Size Relatable", text: "About the size of a deck of cards." },
+          { axis: "Frequency Clear", text: "Once a week — less often than you check your email." }
+        ]}
+      ]
+    };
+    
+    // Additional generated reframes
+    const additionalReframes = {
+      'Identity Invitation': [
+        { axis: "Peer Momentum", text: "Your peers are already seeing results. Here's how to catch up — fast.", isNew: true },
+        { axis: "Insider Status", text: "Early adopters are getting exclusive access. Join them.", isNew: true },
+        { axis: "Leadership Signal", text: "Leaders in your space are making this move. Here's why.", isNew: true },
+        { axis: "Future Self", text: "The version of you that's already solved this? They started here.", isNew: true }
+      ],
+      'Plain Language Translation': [
+        { axis: "One Sentence", text: "In short: less hassle, same results.", isNew: true },
+        { axis: "Kid Test", text: "If you had to explain it to a 10-year-old: it just works better.", isNew: true },
+        { axis: "No Jargon", text: "Skip the buzzwords. This saves you time.", isNew: true }
+      ]
+    };
+    
+    // Initialize
+    document.getElementById('messageInput').addEventListener('input', function() {
+      document.getElementById('btnAnalyze').disabled = !this.value.trim();
+    });
+    
+    document.querySelectorAll('.reaction-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.reaction-btn').forEach(b => b.classList.remove('selected'));
+        this.classList.add('selected');
+        selectedReaction = this.dataset.reaction;
+        selectedRootCause = this.dataset.cause;
+      });
+    });
+    
+    // Mode selection
+    function selectMode(mode) {
+      selectedMode = mode;
+      document.getElementById('modeDiagnose').classList.toggle('selected', mode === 'diagnose');
+      document.getElementById('modeLearn').classList.toggle('selected', mode === 'learn');
+    }
+    
+    function startMode() {
+      if (selectedMode === 'learn') {
+        buildLearnFamilyList();
+        goToScreen(7);
+      } else {
+        goToScreen(1);
+      }
+    }
+    
+    // Analyze
+    function analyzeMessage() {
+      goToScreen('1b');
+      setTimeout(() => {
+        const cause = selectedRootCause || 'identity_threat';
+        const causeData = rootCauses[cause];
+        document.getElementById('diagnosisRootCause').textContent = causeData.diagnosis;
+        document.getElementById('diagnosisInsight').textContent = causeData.insight;
+        document.getElementById('echoMessage').textContent = '"' + document.getElementById('messageInput').value + '"';
+        buildTechniqueCards(cause);
+        goToScreen(2);
+      }, 1500);
+    }
+    
+    // Technique cards
+    function buildTechniqueCards(cause) {
+      const techList = techniques[cause] || techniques['identity_threat'];
+      const container = document.getElementById('techniqueCards');
+      container.innerHTML = '';
+      
+      techList.forEach((tech, index) => {
+        const card = document.createElement('button');
+        card.className = 'technique-card' + (index === 0 ? ' recommended' : '');
+        card.onclick = () => selectTechnique(tech, cause);
+        card.innerHTML = `
+          <div class="technique-header">
+            <div>
+              <div class="technique-meta">${tech.family}</div>
+              <div class="technique-name">${tech.name}</div>
+            </div>
+            <div class="technique-score">
+              <div class="score-value">${tech.score}%</div>
+              <div class="score-label">Fit</div>
+            </div>
+          </div>
+          <p class="technique-desc">${tech.description}</p>
+          <div class="technique-example">${tech.example}</div>
+          <div class="badge-row">
+            ${index === 0 ? '<span class="badge dark">Recommended</span>' : ''}
+            <span class="badge">Low risk</span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+    
+    // Build family lists
+    function buildFamilyList(containerId, onclick) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      families.forEach(f => {
+        const card = document.createElement('div');
+        card.className = 'family-card';
+        card.onclick = () => onclick(f);
+        card.innerHTML = `
+          <div class="family-info">
+            <div class="family-name">${f.name}</div>
+            <div class="family-count">${f.count} techniques</div>
+          </div>
+          <svg class="family-arrow" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        `;
+        container.appendChild(card);
+      });
+    }
+    
+    function buildLearnFamilyList() {
+      buildFamilyList('learnFamilyList', showLearnFamily);
+    }
+    
+    function showLearnFamily(family) {
+      currentFamilyId = family.id;
+      document.getElementById('learnFamilyTitle').textContent = family.name;
+      const container = document.getElementById('learnTechList');
+      container.innerHTML = '';
+      const techs = allTechniques.filter(t => t.familyId === family.id);
+      techs.forEach(t => {
+        const item = document.createElement('div');
+        item.className = 'tech-list-item';
+        item.onclick = () => showTechDetail(t);
+        item.innerHTML = `
+          <div class="tech-list-name">${t.name}</div>
+          <div class="tech-list-desc">${t.when}</div>
+        `;
+        container.appendChild(item);
+      });
+      goToScreen('7b');
+    }
+    
+    function showTechDetail(tech) {
+      currentTechDetail = tech;
+      document.getElementById('techDetailFamily').textContent = tech.family;
+      document.getElementById('techDetailName').textContent = tech.name;
+      document.getElementById('techDetailWhen').textContent = tech.when;
+      document.getElementById('techDetailDef').textContent = tech.def;
+      document.getElementById('techDetailExample').textContent = '"Example reframe using ' + tech.name + '..."';
+      goToScreen('7c');
+    }
+    
+    function useTechniqueFromLearn() {
+      alert('This would take you to Diagnose mode with ' + currentTechDetail.name + ' pre-selected.');
+    }
+    
+    // Select technique
+    function selectTechnique(tech, cause) {
+      selectedTechnique = tech;
+      selectedReframes = [];
+      generatedCount = 0;
+      allReframes = [...tech.reframes];
+      document.getElementById('selectedTechniqueBadge').textContent = tech.name;
+      buildReframeOptions();
+      updateSelectionCount();
+      goToScreen(4);
+    }
+    
+    // Reframe options
+    function buildReframeOptions() {
+      const container = document.getElementById('reframeOptions');
+      container.innerHTML = '';
+      
+      allReframes.forEach((item, index) => {
+        const option = document.createElement('button');
+        option.className = 'reframe-option' + (selectedReframes.find(r => r.index === index) ? ' selected' : '');
+        option.dataset.index = index;
+        option.onclick = () => toggleReframe(index, item, option);
+        option.innerHTML = `
+          <div class="reframe-checkbox">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="reframe-header">
+            <div class="reframe-axis">${item.axis}</div>
+            ${item.isNew ? '<span class="badge new">New</span>' : ''}
+          </div>
+          <div class="reframe-text">${item.text}</div>
+        `;
+        container.appendChild(option);
+      });
+    }
+    
+    function toggleReframe(index, item, element) {
+      const existingIndex = selectedReframes.findIndex(r => r.index === index);
+      if (existingIndex > -1) {
+        selectedReframes.splice(existingIndex, 1);
+        element.classList.remove('selected');
+      } else {
+        selectedReframes.push({ index, ...item });
+        element.classList.add('selected');
+      }
+      updateSelectionCount();
+    }
+    
+    function updateSelectionCount() {
+      document.getElementById('selectionCount').textContent = selectedReframes.length;
+      document.getElementById('btnTest').disabled = selectedReframes.length === 0;
+      document.getElementById('btnSkipTest').disabled = selectedReframes.length === 0;
+    }
+    
+    // Generate more reframes
+    function generateMoreReframes() {
+      const additional = additionalReframes[selectedTechnique.name] || [];
+      const toAdd = additional.slice(generatedCount, generatedCount + 2);
+      if (toAdd.length === 0) {
+        alert('No more variations available for this technique.');
+        return;
+      }
+      toAdd.forEach(r => allReframes.push(r));
+      generatedCount += toAdd.length;
+      buildReframeOptions();
+    }
+    
+    // Testing
+    function runTest() {
+      const audience = document.getElementById('audienceInput').value || 'General audience';
+      document.getElementById('testingAudience').textContent = audience;
+      document.getElementById('resultsAudience').textContent = audience;
+      
+      const testingItems = document.getElementById('testingItems');
+      testingItems.innerHTML = selectedReframes.map((r, i) => `
+        <div class="testing-item" id="testItem${i}">
+          <div class="testing-item-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <span>Testing "${r.axis}"...</span>
+        </div>
+      `).join('');
+      
+      goToScreen('4b');
+      
+      let completed = 0;
+      const interval = setInterval(() => {
+        if (completed < selectedReframes.length) {
+          document.getElementById('testItem' + completed).classList.add('done');
+          completed++;
+        } else {
+          clearInterval(interval);
+          setTimeout(() => {
+            generateResults();
+            goToScreen(5);
+          }, 500);
+        }
+      }, 600);
+    }
+    
+    function generateResults() {
+      testResults = selectedReframes.map(r => ({
+        ...r,
+        overall: 60 + Math.floor(Math.random() * 30),
+        clarity: 50 + Math.floor(Math.random() * 45),
+        resonance: 50 + Math.floor(Math.random() * 45),
+        lowThreat: 50 + Math.floor(Math.random() * 45),
+        differentiation: 50 + Math.floor(Math.random() * 45)
+      }));
+      testResults.sort((a, b) => b.overall - a.overall);
+      winnerReframe = testResults[0];
+      
+      const container = document.getElementById('resultCards');
+      container.innerHTML = '';
+      testResults.forEach((r, index) => {
+        const isWinner = index === 0;
+        const card = document.createElement('div');
+        card.className = 'result-card' + (isWinner ? ' winner' : ' collapsed');
+        card.innerHTML = `
+          ${isWinner ? '<div class="winner-label">🏆 Winner</div>' : ''}
+          <div class="result-header">
+            <div class="result-rank">
+              <div class="rank-badge">${index + 1}</div>
+              <div class="result-axis">${r.axis}</div>
+            </div>
+            <div class="result-score">
+              <div class="result-score-value">${r.overall}%</div>
+              <div class="result-score-label">Overall</div>
+            </div>
+          </div>
+          <div class="result-text">${r.text}</div>
+          <div class="result-metrics">
+            <div class="metric"><span class="metric-label">Clarity</span><span class="metric-value">${r.clarity}%</span></div>
+            <div class="metric"><span class="metric-label">Resonance</span><span class="metric-value">${r.resonance}%</span></div>
+            <div class="metric"><span class="metric-label">Low threat</span><span class="metric-value">${r.lowThreat}%</span></div>
+            <div class="metric"><span class="metric-label">Differentiation</span><span class="metric-value">${r.differentiation}%</span></div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+    
+    function skipTest() {
+      winnerReframe = selectedReframes[0];
+      winnerReframe.overall = selectedTechnique.score;
+      finishWithReframe(winnerReframe);
+    }
+    
+    function useWinner() {
+      finishWithReframe(winnerReframe);
+    }
+    
+    function finishWithReframe(reframe) {
+      document.getElementById('finalReframe').textContent = '"' + reframe.text + '"';
+      document.getElementById('summaryRootCause').textContent = rootCauses[selectedRootCause || 'identity_threat'].label;
+      document.getElementById('summaryTechnique').textContent = selectedTechnique.name;
+      document.getElementById('summaryAngle').textContent = reframe.axis;
+      document.getElementById('summaryScore').textContent = reframe.overall + '%';
+      goToScreen(6);
+    }
+    
+    // Learn mode tabs
+    function setLearnTab(tab) {
+      currentLearnTab = tab;
+      document.querySelectorAll('.learn-nav-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById('learnBrowse').style.display = tab === 'browse' ? 'block' : 'none';
+      document.getElementById('learnFlashcards').style.display = tab === 'flashcards' ? 'block' : 'none';
+      document.getElementById('learnCases').style.display = tab === 'cases' ? 'block' : 'none';
+      
+      if (tab === 'flashcards') {
+        updateFlashcard();
+      }
+    }
+    
+    // Flashcards
+    function updateFlashcard() {
+      const tech = allTechniques[currentCardIndex];
+      document.getElementById('flashcardTitle').textContent = tech.name;
+      document.getElementById('flashcardTitleBack').textContent = tech.name;
+      document.getElementById('flashcardFamily').textContent = tech.family;
+      document.getElementById('flashcardWhen').textContent = tech.when;
+      document.getElementById('flashcardDef').textContent = tech.def;
+      document.getElementById('cardIndex').textContent = currentCardIndex + 1;
+      document.getElementById('cardTotal').textContent = allTechniques.length;
+      document.getElementById('flashcard').classList.remove('flipped');
+    }
+    
+    function flipCard() {
+      document.getElementById('flashcard').classList.toggle('flipped');
+    }
+    
+    function nextCard() {
+      currentCardIndex = (currentCardIndex + 1) % allTechniques.length;
+      updateFlashcard();
+    }
+    
+    function prevCard() {
+      currentCardIndex = (currentCardIndex - 1 + allTechniques.length) % allTechniques.length;
+      updateFlashcard();
+    }
+    
+    function showCaseDetail(index) {
+      alert('Case study detail view coming soon!');
+    }
+    
+    // Navigation
+    function goToScreen(index) {
+      const stringScreens = ['1b', '4b', '3b', '3c', '7b', '7c'];
+      if (stringScreens.includes(index)) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById('screen' + index).classList.add('active');
+        return;
+      }
+      
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('screen' + index).classList.add('active');
+      currentScreen = index;
+      updateProgress();
+      
+      const labelMap = {0: 'Start', 1: 'Intake', 2: 'Diagnosis', 3: 'Techniques', 4: 'Reframes', 5: 'Results', 6: 'Done', 7: 'Learn'};
+      document.getElementById('screenLabel').textContent = labelMap[index] || '';
+    }
+    
+    function updateProgress() {
+      const progressMap = {0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 5, 7: 0};
+      const pos = progressMap[currentScreen] || 0;
+      for (let i = 0; i < 6; i++) {
+        const dot = document.getElementById('dot' + i);
+        dot.classList.remove('active', 'completed');
+        if (i === pos) dot.classList.add('active');
+        else if (i < pos) dot.classList.add('completed');
+      }
+    }
+    
+    function resetApp() {
+      document.getElementById('messageInput').value = '';
+      document.getElementById('audienceInput').value = '';
+      document.querySelectorAll('.reaction-btn').forEach(b => b.classList.remove('selected'));
+      selectedReaction = null;
+      selectedRootCause = null;
+      selectedTechnique = null;
+      selectedReframes = [];
+      allReframes = [];
+      generatedCount = 0;
+      testResults = [];
+      winnerReframe = null;
+      document.getElementById('btnAnalyze').disabled = true;
+      document.getElementById('btnTest').disabled = true;
+      document.getElementById('btnSkipTest').disabled = true;
+      goToScreen(0);
+    }
+    
+    // Init
+    updateProgress();
+    buildLearnFamilyList();
+  </script>
+</body>
+</html>
