@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reframer – Phase 1 Prototype v4</title>
+  <title>Reframer – Say it so it lands</title>
   <style>
     * {
       margin: 0;
@@ -42,6 +42,12 @@
       justify-content: space-between;
       margin-bottom: 16px;
       flex-shrink: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .header.hidden {
+      opacity: 0;
+      pointer-events: none;
     }
     
     .logo {
@@ -82,6 +88,11 @@
       justify-content: center;
       margin-bottom: 24px;
       flex-shrink: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .progress.hidden {
+      opacity: 0;
     }
     
     .progress-dot {
@@ -116,7 +127,263 @@
       display: block;
     }
     
-    /* Typography */
+    /* ========== LANDING PAGE ========== */
+    
+    .landing {
+      display: flex;
+      flex-direction: column;
+      min-height: 580px;
+      text-align: center;
+    }
+    
+    .landing-hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 20px 0;
+    }
+    
+    .landing-logo {
+      width: 80px;
+      height: 80px;
+      border: 3px solid #292524;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 36px;
+      margin: 0 auto 24px;
+      color: #292524;
+    }
+    
+    .landing-title {
+      font-size: 36px;
+      font-weight: 700;
+      color: #292524;
+      margin-bottom: 8px;
+      line-height: 1.1;
+    }
+    
+    .landing-tagline {
+      font-size: 20px;
+      color: #78716c;
+      margin-bottom: 40px;
+      line-height: 1.4;
+    }
+    
+    .landing-visual {
+      padding: 24px 20px;
+      background: #fafaf9;
+      border-radius: 16px;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+    
+    .visual-before {
+      font-size: 14px;
+      color: #a8a29e;
+      margin-bottom: 12px;
+      text-decoration: line-through;
+    }
+    
+    .visual-arrow {
+      font-size: 18px;
+      color: #d6d3d1;
+      margin: 8px 0;
+    }
+    
+    .visual-after {
+      font-size: 16px;
+      color: #292524;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+    
+    .landing-cta {
+      margin-top: auto;
+    }
+    
+    .btn-primary {
+      width: 100%;
+      padding: 16px;
+      border: 2px solid #292524;
+      border-radius: 14px;
+      background: #292524;
+      color: white;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn-primary:hover {
+      background: #1c1917;
+    }
+    
+    .btn-primary:disabled {
+      background: #e7e5e4;
+      border-color: #e7e5e4;
+      color: #a8a29e;
+      cursor: not-allowed;
+    }
+    
+    .landing-footer {
+      margin-top: 16px;
+      font-size: 13px;
+      color: #a8a29e;
+    }
+    
+    /* ========== INTRO SCREENS ========== */
+    
+    .intro {
+      display: flex;
+      flex-direction: column;
+      min-height: 580px;
+      text-align: center;
+    }
+    
+    .intro-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 20px 0;
+    }
+    
+    .intro-icon {
+      width: 72px;
+      height: 72px;
+      border: 2px solid #292524;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 28px;
+    }
+    
+    .intro-icon svg {
+      width: 36px;
+      height: 36px;
+      stroke: #292524;
+      stroke-width: 2;
+      fill: none;
+    }
+    
+    .intro-icon-row {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+    
+    .intro-icon-small {
+      width: 56px;
+      height: 56px;
+      border: 2px solid #292524;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .intro-icon-small svg {
+      width: 28px;
+      height: 28px;
+      stroke: #292524;
+      stroke-width: 2;
+      fill: none;
+    }
+    
+    .intro-number {
+      font-size: 13px;
+      font-weight: 600;
+      color: #a8a29e;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+    
+    .intro-title {
+      font-size: 26px;
+      font-weight: 600;
+      color: #292524;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+    
+    .intro-desc {
+      font-size: 16px;
+      color: #57534e;
+      line-height: 1.6;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+    
+    .intro-desc strong {
+      color: #292524;
+      font-weight: 600;
+    }
+    
+    .intro-dots {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin: 40px 0;
+    }
+    
+    .intro-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #e7e5e4;
+      transition: background 0.3s;
+    }
+    
+    .intro-dot.active {
+      background: #292524;
+    }
+    
+    .intro-nav {
+      margin-top: auto;
+      display: flex;
+      gap: 12px;
+    }
+    
+    .btn-secondary {
+      flex: 1;
+      padding: 16px 20px;
+      border: 2px solid #e7e5e4;
+      border-radius: 14px;
+      background: white;
+      color: #57534e;
+      font-size: 16px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    
+    .btn-secondary:hover {
+      border-color: #292524;
+    }
+    
+    .btn-text {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      background: none;
+      color: #78716c;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+    
+    .btn-text:hover {
+      color: #292524;
+    }
+    
+    /* ========== REST OF APP STYLES ========== */
+    
     h1 {
       font-size: 26px;
       font-weight: 600;
@@ -292,46 +559,6 @@
     }
     
     /* Buttons */
-    .btn-primary {
-      width: 100%;
-      padding: 16px;
-      border: 2px solid #292524;
-      border-radius: 14px;
-      background: #292524;
-      color: white;
-      font-size: 16px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-      margin-top: 16px;
-    }
-    
-    .btn-primary:hover {
-      background: #1c1917;
-    }
-    
-    .btn-primary:disabled {
-      background: #e7e5e4;
-      border-color: #e7e5e4;
-      color: #a8a29e;
-      cursor: not-allowed;
-    }
-    
-    .btn-secondary {
-      padding: 16px 20px;
-      border: 2px solid #e7e5e4;
-      border-radius: 14px;
-      background: white;
-      color: #57534e;
-      font-size: 16px;
-      cursor: pointer;
-      transition: border-color 0.2s;
-    }
-    
-    .btn-secondary:hover {
-      border-color: #292524;
-    }
-    
     .btn-outline {
       width: 100%;
       padding: 16px;
@@ -394,24 +621,10 @@
     }
     
     .btn-row .btn-primary,
-    .btn-row .btn-outline {
+    .btn-row .btn-outline,
+    .btn-row .btn-secondary {
       flex: 1;
       margin-top: 0;
-    }
-    
-    .btn-text {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      background: none;
-      color: #78716c;
-      font-size: 14px;
-      cursor: pointer;
-      margin-top: 8px;
-    }
-    
-    .btn-text:hover {
-      color: #292524;
     }
     
     /* Cards */
@@ -642,6 +855,212 @@
     
     .selection-count strong {
       color: #292524;
+    }
+    
+    .selection-minimum {
+      color: #a8a29e;
+    }
+    
+    /* Technique Primary Card */
+    .technique-primary {
+      padding: 20px;
+      border: 2px solid #292524;
+      border-radius: 16px;
+      background: #fafaf9;
+      margin-bottom: 24px;
+    }
+    
+    .technique-primary-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    
+    .technique-primary-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #78716c;
+      margin-bottom: 4px;
+    }
+    
+    .technique-primary-name {
+      font-size: 20px;
+      font-weight: 600;
+      color: #292524;
+    }
+    
+    .technique-primary-desc {
+      font-size: 14px;
+      color: #57534e;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+    
+    .btn-change-technique {
+      padding: 8px 14px;
+      border: 1.5px solid #d6d3d1;
+      border-radius: 8px;
+      background: white;
+      font-size: 13px;
+      color: #57534e;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    
+    .btn-change-technique:hover {
+      border-color: #292524;
+    }
+    
+    /* Styling Section */
+    .styling-section {
+      margin-bottom: 24px;
+    }
+    
+    .styling-header {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    
+    .styling-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #292524;
+    }
+    
+    .styling-optional {
+      font-size: 12px;
+      color: #a8a29e;
+    }
+    
+    .styling-row {
+      margin-bottom: 16px;
+    }
+    
+    .styling-row-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #57534e;
+      margin-bottom: 8px;
+    }
+    
+    .styling-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    
+    .styling-pill {
+      padding: 8px 14px;
+      border: 1.5px solid #e7e5e4;
+      border-radius: 20px;
+      background: white;
+      font-size: 13px;
+      color: #57534e;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .styling-pill:hover {
+      border-color: #d6d3d1;
+    }
+    
+    .styling-pill.active {
+      background: #292524;
+      border-color: #292524;
+      color: white;
+    }
+    
+    /* Reframe cards - simpler, no meta tags */
+    .reframe-option {
+      width: 100%;
+      padding: 16px;
+      border: 2px solid #e7e5e4;
+      border-radius: 14px;
+      background: white;
+      cursor: pointer;
+      text-align: left;
+      margin-bottom: 10px;
+      transition: all 0.2s;
+      position: relative;
+    }
+    
+    .reframe-option:hover {
+      border-color: #d6d3d1;
+    }
+    
+    .reframe-option.selected {
+      border-color: #292524;
+      background: #fafaf9;
+    }
+    
+    .reframe-checkbox {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 24px;
+      height: 24px;
+      border: 2px solid #d6d3d1;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    
+    .reframe-option.selected .reframe-checkbox {
+      background: #292524;
+      border-color: #292524;
+    }
+    
+    .reframe-checkbox svg {
+      width: 14px;
+      height: 14px;
+      stroke: white;
+      stroke-width: 3;
+      fill: none;
+      opacity: 0;
+    }
+    
+    .reframe-option.selected .reframe-checkbox svg {
+      opacity: 1;
+    }
+    
+    .reframe-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #78716c;
+      margin-bottom: 6px;
+    }
+    
+    .reframe-text {
+      font-size: 15px;
+      color: #292524;
+      line-height: 1.5;
+      padding-right: 36px;
+    }
+    
+    /* Result card with reasoning */
+    .result-reasoning {
+      font-size: 13px;
+      color: #57534e;
+      line-height: 1.5;
+      padding: 12px;
+      background: #f5f5f4;
+      border-radius: 8px;
+      margin-top: 12px;
+      border-left: 3px solid #78716c;
+    }
+    
+    .result-card.winner .result-reasoning {
+      background: white;
+      border-left-color: #292524;
     }
     
     /* Testing */
@@ -979,7 +1398,6 @@
     
     /* ========== LEARNING MODE ========== */
     
-    /* Learn navigation */
     .learn-nav {
       display: flex;
       gap: 8px;
@@ -1011,7 +1429,6 @@
       color: white;
     }
     
-    /* Family list */
     .family-card {
       padding: 16px;
       border: 2px solid #e7e5e4;
@@ -1053,7 +1470,6 @@
       fill: none;
     }
     
-    /* Technique list in family */
     .tech-list-item {
       padding: 14px 16px;
       border: 2px solid #e7e5e4;
@@ -1277,10 +1693,7 @@
     }
     
     /* Helpers */
-    .text-center {
-      text-align: center;
-    }
-    
+    .text-center { text-align: center; }
     .mb-8 { margin-bottom: 8px; }
     .mb-16 { margin-bottom: 16px; }
     .mb-24 { margin-bottom: 24px; }
@@ -1290,7 +1703,7 @@
 <body>
   <div class="phone-frame">
     <!-- Header -->
-    <div class="header">
+    <div class="header hidden" id="header">
       <div class="logo">
         <div class="logo-icon">R</div>
         <span class="logo-text">Reframer</span>
@@ -1299,7 +1712,7 @@
     </div>
     
     <!-- Progress -->
-    <div class="progress" id="progressBar">
+    <div class="progress hidden" id="progressBar">
       <div class="progress-dot" id="dot0"></div>
       <div class="progress-dot" id="dot1"></div>
       <div class="progress-dot" id="dot2"></div>
@@ -1311,8 +1724,110 @@
     <!-- Content -->
     <div class="content">
       
+      <!-- ========== LANDING PAGE ========== -->
+      <div class="screen active" id="screenLanding">
+        <div class="landing">
+          <div class="landing-hero">
+            <div class="landing-logo">R</div>
+            <h1 class="landing-title">Reframer</h1>
+            <p class="landing-tagline">Say it so it lands.</p>
+            
+            <div class="landing-visual">
+              <div class="visual-before">"We're not the biggest car rental company."</div>
+              <div class="visual-arrow">↓</div>
+              <div class="visual-after">"We're #2. We try harder."</div>
+            </div>
+          </div>
+          
+          <div class="landing-cta">
+            <button class="btn-primary" onclick="goToScreen('intro1')">Get started</button>
+            <p class="landing-footer">58 techniques · Based on behavioral science</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- ========== INTRO FLOW ========== -->
+      <div class="screen" id="screenIntro1">
+        <div class="intro">
+          <div class="intro-content">
+            <div class="intro-icon">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <div class="intro-number">The problem</div>
+            <h2 class="intro-title">Messages fail for predictable reasons</h2>
+            <p class="intro-desc">Confusion. Fear. Identity threat. Blame. When your message isn't landing, there's usually a diagnosable cause.</p>
+          </div>
+          
+          <div class="intro-dots">
+            <div class="intro-dot active"></div>
+            <div class="intro-dot"></div>
+            <div class="intro-dot"></div>
+          </div>
+          
+          <div class="intro-nav">
+            <button class="btn-secondary" onclick="goToScreen('landing')">Back</button>
+            <button class="btn-primary" onclick="goToScreen('intro2')">Next</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="screen" id="screenIntro2">
+        <div class="intro">
+          <div class="intro-content">
+            <div class="intro-icon">
+              <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <div class="intro-number">The solution</div>
+            <h2 class="intro-title">We diagnose. You decide.</h2>
+            <p class="intro-desc">Paste your message. We identify why it's misfiring and recommend the best-fit technique from 58 proven approaches.</p>
+          </div>
+          
+          <div class="intro-dots">
+            <div class="intro-dot"></div>
+            <div class="intro-dot active"></div>
+            <div class="intro-dot"></div>
+          </div>
+          
+          <div class="intro-nav">
+            <button class="btn-secondary" onclick="goToScreen('intro1')">Back</button>
+            <button class="btn-primary" onclick="goToScreen('intro3')">Next</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="screen" id="screenIntro3">
+        <div class="intro">
+          <div class="intro-content">
+            <div class="intro-icon-row">
+              <div class="intro-icon-small">
+                <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              </div>
+              <div class="intro-icon-small">
+                <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+              </div>
+            </div>
+            <div class="intro-number">Two modes</div>
+            <h2 class="intro-title">Fix a message or build the skill</h2>
+            <p class="intro-desc"><strong>Diagnose:</strong> Get reframes for a stuck message.<br><strong>Learn:</strong> Explore the 58 techniques.</p>
+          </div>
+          
+          <div class="intro-dots">
+            <div class="intro-dot"></div>
+            <div class="intro-dot"></div>
+            <div class="intro-dot active"></div>
+          </div>
+          
+          <div class="intro-nav">
+            <button class="btn-secondary" onclick="goToScreen('intro2')">Back</button>
+            <button class="btn-primary" onclick="goToScreen(0)">Let's go →</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- ========== MAIN APP ========== -->
+      
       <!-- Screen 0: Mode Selection -->
-      <div class="screen active" id="screen0">
+      <div class="screen" id="screen0">
         <h1>How can I help?</h1>
         <p class="subtitle">Choose your path.</p>
         
@@ -1463,34 +1978,88 @@
         <button class="btn-text" onclick="goToScreen('3b')">← Back to families</button>
       </div>
       
-      <!-- Screen 4: Reframe Selection -->
+      <!-- Screen 4: Reframe Generation -->
       <div class="screen" id="screen4">
-        <h1>Select reframes to test</h1>
-        <p class="subtitle">Choose as many as you want.</p>
+        <h1>Generate reframes</h1>
+        <p class="subtitle">Using the recommended technique.</p>
+        
+        <!-- Technique (Primary) -->
+        <div class="technique-primary">
+          <div class="technique-primary-header">
+            <div>
+              <div class="technique-primary-label">Technique</div>
+              <div class="technique-primary-name" id="primaryTechniqueName">Identity Invitation</div>
+            </div>
+            <div class="technique-primary-score">
+              <div class="score-value" id="primaryTechniqueScore">87%</div>
+              <div class="score-label">Fit</div>
+            </div>
+          </div>
+          <p class="technique-primary-desc" id="primaryTechniqueDesc">Invite the audience into a positive identity that matches the desired behavior.</p>
+          <button class="btn-change-technique" onclick="goToScreen(3)">Change technique</button>
+        </div>
+        
+        <!-- Optional Styling -->
+        <div class="styling-section">
+          <div class="styling-header">
+            <span class="styling-title">Style options</span>
+            <span class="styling-optional">optional</span>
+          </div>
+          
+          <!-- Voice -->
+          <div class="styling-row">
+            <div class="styling-row-label">Voice</div>
+            <div class="styling-pills">
+              <button class="styling-pill active" data-type="voice" data-value="auto" onclick="selectStyling('voice', 'auto', this)">You choose</button>
+              <button class="styling-pill" data-type="voice" data-value="peer" onclick="selectStyling('voice', 'peer', this)">Peer</button>
+              <button class="styling-pill" data-type="voice" data-value="expert" onclick="selectStyling('voice', 'expert', this)">Expert</button>
+              <button class="styling-pill" data-type="voice" data-value="brand" onclick="selectStyling('voice', 'brand', this)">Brand</button>
+            </div>
+          </div>
+          
+          <!-- Vehicle -->
+          <div class="styling-row">
+            <div class="styling-row-label">Format</div>
+            <div class="styling-pills">
+              <button class="styling-pill active" data-type="vehicle" data-value="auto" onclick="selectStyling('vehicle', 'auto', this)">You choose</button>
+              <button class="styling-pill" data-type="vehicle" data-value="story" onclick="selectStyling('vehicle', 'story', this)">Story</button>
+              <button class="styling-pill" data-type="vehicle" data-value="statistic" onclick="selectStyling('vehicle', 'statistic', this)">Stat</button>
+              <button class="styling-pill" data-type="vehicle" data-value="question" onclick="selectStyling('vehicle', 'question', this)">Question</button>
+              <button class="styling-pill" data-type="vehicle" data-value="analogy" onclick="selectStyling('vehicle', 'analogy', this)">Analogy</button>
+            </div>
+          </div>
+        </div>
+        
+        <button class="btn-primary" onclick="generateReframes()">Generate reframes →</button>
+        <button class="btn-text" onclick="goToScreen(3)">← Back to techniques</button>
+      </div>
+      
+      <!-- Screen 4b: Reframe Selection -->
+      <div class="screen" id="screen4b">
+        <h1>Pick at least two</h1>
+        <p class="subtitle">A/B testing needs options to compare.</p>
         
         <div class="mb-16">
-          <span class="badge dark" id="selectedTechniqueBadge">Identity Invitation</span>
+          <span class="badge dark" id="resultTechniqueBadge">Identity Invitation</span>
         </div>
         
         <div class="selection-count">
-          <strong id="selectionCount">0</strong> selected
+          <strong id="selectionCount">0</strong> selected <span class="selection-minimum">(min 2 for testing)</span>
         </div>
         
         <div id="reframeOptions"></div>
         
-        <button class="btn-ghost" onclick="generateMoreReframes()">
+        <button class="btn-ghost" onclick="regenerateReframes()">
           <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
-          Generate more options
+          Generate more
         </button>
         
-        <button class="btn-primary" id="btnTest" disabled onclick="runTest()">Test with synthetic audience</button>
-        <button class="btn-outline" id="btnSkipTest" disabled onclick="skipTest()">Use selected without testing</button>
-        
-        <button class="btn-text" onclick="goToScreen(3)">← Back to techniques</button>
+        <button class="btn-primary" id="btnTest" disabled onclick="runTest()">Test these →</button>
+        <button class="btn-text" onclick="goToScreen(4)">← Change style options</button>
       </div>
       
-      <!-- Screen 4b: Testing -->
-      <div class="screen" id="screen4b">
+      <!-- Screen 4c: Testing -->
+      <div class="screen" id="screen4c">
         <div class="testing-container">
           <div class="testing-spinner"></div>
           <p class="testing-title">Testing with synthetic audience</p>
@@ -1510,7 +2079,7 @@
         <div id="resultCards"></div>
         
         <div class="btn-row">
-          <button class="btn-outline" onclick="goToScreen(4)">Try new ones</button>
+          <button class="btn-outline" onclick="goToScreen('4b')">Try new ones</button>
           <button class="btn-primary" onclick="useWinner()">Use winner →</button>
         </div>
       </div>
@@ -1566,7 +2135,7 @@
         <button class="btn-text" onclick="goToScreen(7)">Learn more about this technique →</button>
       </div>
       
-      <!-- ========== LEARNING MODE SCREENS ========== -->
+      <!-- ========== LEARNING MODE ========== -->
       
       <!-- Screen 7: Learn Home -->
       <div class="screen" id="screen7">
@@ -1574,17 +2143,15 @@
         <p class="subtitle">Master the 58 techniques.</p>
         
         <div class="learn-nav">
-          <button class="learn-nav-btn active" onclick="setLearnTab('browse')">Browse</button>
-          <button class="learn-nav-btn" onclick="setLearnTab('flashcards')">Flashcards</button>
-          <button class="learn-nav-btn" onclick="setLearnTab('cases')">Case Studies</button>
+          <button class="learn-nav-btn active" onclick="setLearnTab('browse', this)">Browse</button>
+          <button class="learn-nav-btn" onclick="setLearnTab('flashcards', this)">Flashcards</button>
+          <button class="learn-nav-btn" onclick="setLearnTab('cases', this)">Case Studies</button>
         </div>
         
-        <!-- Browse Tab -->
         <div id="learnBrowse">
           <div id="learnFamilyList"></div>
         </div>
         
-        <!-- Flashcards Tab -->
         <div id="learnFlashcards" style="display:none;">
           <div class="flashcard-container">
             <div class="flashcard" id="flashcard" onclick="flipCard()">
@@ -1592,7 +2159,7 @@
                 <div class="flashcard-label">When to use</div>
                 <div class="flashcard-title" id="flashcardTitle">Valence Switching</div>
                 <div class="flashcard-family" id="flashcardFamily">Wording & Labeling</div>
-                <div class="flashcard-content" id="flashcardWhen">Use when wording feels harsh, negative, or stigmatizing and the facts do not need to change.</div>
+                <div class="flashcard-content" id="flashcardWhen">Use when wording feels harsh, negative, or stigmatizing.</div>
                 <div class="flashcard-hint">Tap to see definition</div>
               </div>
               <div class="flashcard-face flashcard-back">
@@ -1617,9 +2184,8 @@
           </div>
         </div>
         
-        <!-- Case Studies Tab -->
         <div id="learnCases" style="display:none;">
-          <div class="case-card" onclick="showCaseDetail(0)">
+          <div class="case-card">
             <div class="case-header">
               <div class="case-industry">Healthcare</div>
               <div class="case-title">Reducing patient no-shows</div>
@@ -1642,7 +2208,7 @@
             </div>
           </div>
           
-          <div class="case-card" onclick="showCaseDetail(1)">
+          <div class="case-card">
             <div class="case-header">
               <div class="case-industry">SaaS</div>
               <div class="case-title">Increasing trial conversions</div>
@@ -1665,7 +2231,7 @@
             </div>
           </div>
           
-          <div class="case-card" onclick="showCaseDetail(2)">
+          <div class="case-card">
             <div class="case-header">
               <div class="case-industry">Finance</div>
               <div class="case-title">Explaining fee structures</div>
@@ -1674,11 +2240,11 @@
               <div class="case-before-after">
                 <div class="case-column">
                   <div class="case-column-label">Before</div>
-                  <div class="case-column-text">"There's a 2.5% annual management fee."</div>
+                  <div class="case-column-text">"There's a 2.5% annual fee."</div>
                 </div>
                 <div class="case-column">
                   <div class="case-column-label">After</div>
-                  <div class="case-column-text">"For every $100 you invest, $2.50 goes to management — the rest works for you."</div>
+                  <div class="case-column-text">"For every $100, $2.50 goes to management."</div>
                 </div>
               </div>
               <div class="case-technique">
@@ -1719,11 +2285,6 @@
           <p id="techDetailDef">...</p>
         </div>
         
-        <div class="card card-default">
-          <div class="card-label">Example</div>
-          <p id="techDetailExample">...</p>
-        </div>
-        
         <button class="btn-primary" onclick="useTechniqueFromLearn()">Use this technique →</button>
         <button class="btn-text" onclick="goToScreen('7b')">← Back to family</button>
       </div>
@@ -1733,7 +2294,7 @@
 
   <script>
     // State
-    let currentScreen = 0;
+    let currentScreen = 'landing';
     let selectedMode = 'diagnose';
     let selectedReaction = null;
     let selectedRootCause = null;
@@ -1748,7 +2309,6 @@
     let currentFamilyId = null;
     let currentTechDetail = null;
     
-    // Families
     const families = [
       { id: 'wl', name: 'Wording & Labeling', count: 9 },
       { id: 'qs', name: 'Quantity & Scale', count: 8 },
@@ -1760,78 +2320,168 @@
       { id: 'tu', name: 'Time & Uncertainty', count: 4 }
     ];
     
-    // All techniques (sample)
     const allTechniques = [
-      { id: 'WL01', name: 'Valence Switching', family: 'Wording & Labeling', familyId: 'wl', when: 'Use when wording feels harsh, negative, or stigmatizing and the facts do not need to change.', def: 'Swap negative wording for neutral or positive wording while preserving the underlying reality.' },
+      { id: 'WL01', name: 'Valence Switching', family: 'Wording & Labeling', familyId: 'wl', when: 'Use when wording feels harsh, negative, or stigmatizing.', def: 'Swap negative wording for neutral or positive wording while preserving the underlying reality.' },
       { id: 'WL02', name: 'Polarity Inversion', family: 'Wording & Labeling', familyId: 'wl', when: 'Use when the same outcome can be truthfully framed as either a gain or a loss.', def: 'Re-express a loss as a gain or vice versa to shift perception.' },
-      { id: 'WL03', name: 'Survival Framing', family: 'Wording & Labeling', familyId: 'wl', when: 'Use when negative outcome framing is triggering fear or avoidance.', def: 'Present positive survival or success rates instead of negative failure or death rates.' },
       { id: 'WL06', name: 'Plain Language Translation', family: 'Wording & Labeling', familyId: 'wl', when: 'Use when jargon or complexity is confusing the audience.', def: 'Replace technical or abstract language with simple everyday wording.' },
-      { id: 'QS01', name: 'Percentage vs Frequency', family: 'Quantity & Scale', familyId: 'qs', when: 'Use when percentages feel abstract or difficult to visualize.', def: 'Convert percentages into frequencies such as "X out of Y people".' },
-      { id: 'QS05', name: 'Everyday Units', family: 'Quantity & Scale', familyId: 'qs', when: 'Use when units are unfamiliar or abstract.', def: 'Translate measurements into relatable everyday equivalents such as miles driven or cups of coffee.' },
+      { id: 'QS05', name: 'Everyday Units', family: 'Quantity & Scale', familyId: 'qs', when: 'Use when units are unfamiliar or abstract.', def: 'Translate measurements into relatable everyday equivalents.' },
       { id: 'CC07', name: 'Relative Progress', family: 'Contrast & Comparison', familyId: 'cc', when: 'Use when people feel stuck or unmotivated.', def: 'Show how close they are to a goal or how much progress they have already made.' },
-      { id: 'CR01', name: 'System vs Individual Causality', family: 'Causality & Responsibility', familyId: 'cr', when: 'Use when individuals are being blamed for systemic issues.', def: 'Shift explanation from individual actions to system level causes.' },
       { id: 'IS01', name: 'Identity Invitation', family: 'Identity & Social Norms', familyId: 'is', when: 'Use when the behavior aligns with a desirable identity.', def: 'Invite the audience into a positive identity that matches the behavior.' },
-      { id: 'NS02', name: 'Hero Change', family: 'Narrative Structure', familyId: 'ns', when: 'Use when the story centers on the brand or system instead of the audience.', def: 'Shift the hero role to the user or community.' },
       { id: 'NS04', name: 'Plot Arc', family: 'Narrative Structure', familyId: 'ns', when: 'Use when the experience feels flat or static.', def: 'Show how the audience moves from one state to a better state.' },
-      { id: 'MC06', name: 'Investment Frame', family: 'Metaphor & Conceptual Frame', familyId: 'mc', when: 'Use when costs feel like losses but create future value.', def: 'Present contributions as investments in later benefit.' },
       { id: 'TU03', name: 'Certainty Emphasis', family: 'Time & Uncertainty', familyId: 'tu', when: 'Use when people feel everything is uncertain.', def: 'Clarify what is fixed and predictable.' }
     ];
     
-    // Root causes & techniques (same as before, abbreviated)
     const rootCauses = {
-      confusion: { label: "Confusion / Abstraction", diagnosis: "The message is too abstract or jargon-heavy. The audience can't visualize what you're asking them to do or why it matters.", insight: "When people can't see it, they can't act on it. Translate abstract concepts into concrete, everyday language." },
-      fear_risk: { label: "Fear / Perceived Risk", diagnosis: "The message emphasizes what could go wrong, triggering loss aversion.", insight: "Fear freezes action. Reframe to emphasize safety, certainty, or what they preserve." },
-      fairness_blame: { label: "Fairness / Blame", diagnosis: "The message implies fault or creates a sense of unfairness.", insight: "Nobody changes when they feel blamed. Shift responsibility to the system or shared circumstances." },
-      identity_threat: { label: "Identity Threat", diagnosis: "The message implies the audience is doing something wrong or is behind.", insight: "People accept change more easily when they see themselves as smart early adopters, not late correctors." },
-      low_motivation: { label: "Low Motivation", diagnosis: "The message doesn't connect to anything the audience cares about.", insight: "Motivation comes from meaning. Connect the ask to their existing goals, values, or identity." },
-      narrative_mismatch: { label: "Narrative Mismatch", diagnosis: "The story structure doesn't resonate. The audience doesn't see themselves in the narrative.", insight: "Every message is a story. Make sure they're the hero." }
+      confusion: { label: "Confusion", diagnosis: "The message is too abstract or jargon-heavy.", insight: "Translate abstract concepts into concrete, everyday language." },
+      fear_risk: { label: "Fear / Risk", diagnosis: "The message emphasizes what could go wrong.", insight: "Reframe to emphasize safety, certainty, or what they preserve." },
+      fairness_blame: { label: "Fairness / Blame", diagnosis: "The message implies fault or unfairness.", insight: "Shift responsibility to the system or shared circumstances." },
+      identity_threat: { label: "Identity Threat", diagnosis: "The message implies the audience is doing something wrong.", insight: "Position them as smart early adopters, not late correctors." },
+      low_motivation: { label: "Low Motivation", diagnosis: "The message doesn't connect to what they care about.", insight: "Connect the ask to their existing goals, values, or identity." },
+      narrative_mismatch: { label: "Narrative Mismatch", diagnosis: "The audience doesn't see themselves in the story.", insight: "Make sure they're the hero." }
     };
     
     const techniques = {
       identity_threat: [
-        { id: "IS01", name: "Identity Invitation", family: "Identity & Social Norms", score: 87, description: "Invite the audience into a positive identity that matches the desired behavior.", example: "Join the growing number of forward-thinking teams who've made the switch...", reframes: [
-          { axis: "Social Proof", text: "Join the growing number of teams who've already made the switch to real-time collaboration." },
-          { axis: "Aspiration", text: "Forward-thinking managers are discovering a faster way to stay aligned." },
-          { axis: "Validation", text: "The smartest teams we work with started asking the same question you're asking now." },
-          { axis: "Evolution", text: "You've built a solid foundation. Here's how leading teams are taking it to the next level." }
+        { id: "IS01", name: "Identity Invitation", family: "Identity & Social Norms", score: 87, description: "Invite the audience into a positive identity.", example: "Join the growing number of forward-thinking teams...", reframes: [
+          { axis: "Social Proof", text: "Join the growing number of teams who've already made the switch.", vehicle: 'story', voice: 'peer' },
+          { axis: "Aspiration", text: "Forward-thinking managers are discovering a faster way to stay aligned.", vehicle: 'story', voice: 'brand' },
+          { axis: "Validation", text: "The smartest teams we work with started asking the same question.", vehicle: 'story', voice: 'expert' },
+          { axis: "Evolution", text: "You've built a solid foundation. Here's how leading teams are taking it further.", vehicle: 'story', voice: 'peer' }
         ]},
-        { id: "NS04", name: "Plot Arc", family: "Narrative Structure", score: 71, description: "Frame the change as natural evolution, not correction.", example: "You've built a solid foundation. Here's how to take it further...", reframes: [
-          { axis: "Progress", text: "You've come a long way. This is the next step in that journey." },
-          { axis: "Opportunity", text: "What worked yesterday still works — but now there's something even better." },
-          { axis: "Timing", text: "The foundation is set. Now is the right time to build on it." },
-          { axis: "Growth", text: "This isn't about fixing what's broken. It's about unlocking what's next." }
+        { id: "NS04", name: "Plot Arc", family: "Narrative Structure", score: 71, description: "Frame the change as natural evolution.", example: "You've built a solid foundation. Here's how to take it further...", reframes: [
+          { axis: "Progress", text: "You've come a long way. This is the next step.", vehicle: 'story', voice: 'brand' },
+          { axis: "Opportunity", text: "What worked yesterday still works — but now there's something better.", vehicle: 'story', voice: 'brand' },
+          { axis: "Timing", text: "The foundation is set. Now is the right time to build on it.", vehicle: 'story', voice: 'brand' },
+          { axis: "Growth", text: "This isn't about fixing what's broken. It's about unlocking what's next.", vehicle: 'story', voice: 'brand' }
         ]}
       ],
       confusion: [
-        { id: "WL06", name: "Plain Language Translation", family: "Wording & Labeling", score: 84, description: "Replace technical or abstract language with simple everyday wording.", example: "Instead of 'optimize your workflow,' say 'get more done in less time.'", reframes: [
-          { axis: "Everyday Words", text: "Get more done in less time — without adding more meetings." },
-          { axis: "Concrete Action", text: "See all your projects in one place. Update them with one click." },
-          { axis: "Familiar Comparison", text: "Think of it like a shared to-do list that updates itself." },
-          { axis: "Benefit First", text: "Less time hunting for information. More time doing the actual work." }
+        { id: "WL06", name: "Plain Language Translation", family: "Wording & Labeling", score: 84, description: "Replace jargon with simple everyday wording.", example: "Instead of 'optimize your workflow,' say 'get more done in less time.'", reframes: [
+          { axis: "Everyday Words", text: "Get more done in less time — without adding more meetings.", vehicle: 'statistic', voice: 'brand' },
+          { axis: "Concrete Action", text: "See all your projects in one place. Update them with one click.", vehicle: 'story', voice: 'brand' },
+          { axis: "Familiar Comparison", text: "Think of it like a shared to-do list that updates itself.", vehicle: 'analogy', voice: 'brand' },
+          { axis: "Benefit First", text: "Less time hunting for information. More time doing the actual work.", vehicle: 'statistic', voice: 'brand' }
         ]},
         { id: "QS05", name: "Everyday Units", family: "Quantity & Scale", score: 68, description: "Translate abstract measurements into relatable equivalents.", example: "That's about the time it takes to make a cup of coffee.", reframes: [
-          { axis: "Time Familiar", text: "Takes about as long as making a cup of coffee." },
-          { axis: "Money Tangible", text: "Costs less than your monthly streaming subscription." },
-          { axis: "Size Relatable", text: "About the size of a deck of cards." },
-          { axis: "Frequency Clear", text: "Once a week — less often than you check your email." }
+          { axis: "Time Familiar", text: "Takes about as long as making a cup of coffee.", vehicle: 'analogy', voice: 'brand' },
+          { axis: "Money Tangible", text: "Costs less than your monthly streaming subscription.", vehicle: 'analogy', voice: 'brand' },
+          { axis: "Size Relatable", text: "About the size of a deck of cards.", vehicle: 'analogy', voice: 'brand' },
+          { axis: "Frequency Clear", text: "Once a week — less often than you check your email.", vehicle: 'analogy', voice: 'brand' }
         ]}
       ]
     };
     
-    // Additional generated reframes
     const additionalReframes = {
       'Identity Invitation': [
-        { axis: "Peer Momentum", text: "Your peers are already seeing results. Here's how to catch up — fast.", isNew: true },
-        { axis: "Insider Status", text: "Early adopters are getting exclusive access. Join them.", isNew: true },
-        { axis: "Leadership Signal", text: "Leaders in your space are making this move. Here's why.", isNew: true },
-        { axis: "Future Self", text: "The version of you that's already solved this? They started here.", isNew: true }
+        { axis: "Peer Momentum", text: "Your peers are already seeing results. Here's how to catch up — fast.", isNew: true, vehicle: 'story', voice: 'peer' },
+        { axis: "Insider Status", text: "Early adopters are getting exclusive access. Join them.", isNew: true, vehicle: 'story', voice: 'brand' }
       ],
       'Plain Language Translation': [
-        { axis: "One Sentence", text: "In short: less hassle, same results.", isNew: true },
-        { axis: "Kid Test", text: "If you had to explain it to a 10-year-old: it just works better.", isNew: true },
-        { axis: "No Jargon", text: "Skip the buzzwords. This saves you time.", isNew: true }
+        { axis: "One Sentence", text: "In short: less hassle, same results.", isNew: true, vehicle: 'statistic', voice: 'brand' },
+        { axis: "Kid Test", text: "If you had to explain it to a 10-year-old: it just works better.", isNew: true, vehicle: 'analogy', voice: 'brand' }
       ]
     };
+    
+    // Matrix-generated reframes by style combination
+    const matrixReframes = {
+      'Identity Invitation': {
+        'story-peer-social': { axis: "Peer Story", text: "Teams like yours made the switch last quarter. Now they're the ones others ask for advice.", vehicle: 'story', voice: 'peer' },
+        'statistic-expert-logic': { axis: "Expert Data", text: "McKinsey found early adopters are perceived as 40% more innovative by their peers.", vehicle: 'statistic', voice: 'expert' },
+        'question-brand-identity': { axis: "Reflective Question", text: "If you knew it would work, would you want to be first or last?", vehicle: 'question', voice: 'brand' },
+        'analogy-brand-emotion': { axis: "Brand Analogy", text: "Think of it like upgrading from a flip phone—not because yours is broken, but because you're ready.", vehicle: 'analogy', voice: 'brand' },
+        'story-brand-identity': { axis: "Future Vision", text: "A year from now, you'll either be the one who moved early—or the one still catching up.", vehicle: 'story', voice: 'brand' },
+        'statistic-peer-social': { axis: "Peer Numbers", text: "73% of teams in your industry have already started this transition.", vehicle: 'statistic', voice: 'peer' },
+        'question-expert-logic': { axis: "Expert Challenge", text: "The research is clear on the benefits—what's the real hesitation?", vehicle: 'question', voice: 'expert' },
+        'analogy-peer-social': { axis: "Peer Analogy", text: "It's like when your whole team switched to Slack. You don't want to be the last one on email.", vehicle: 'analogy', voice: 'peer' },
+        'story-expert-logic': { axis: "Case Study", text: "When Stripe adopted this approach, their team velocity doubled within two quarters.", vehicle: 'story', voice: 'expert' },
+        'statistic-brand-identity': { axis: "Progress Stat", text: "You're already ahead of 60% of companies. This puts you in the top 10%.", vehicle: 'statistic', voice: 'brand' },
+        'question-peer-social': { axis: "Peer Question", text: "Your competitors are already asking this question. Are you?", vehicle: 'question', voice: 'peer' },
+        'analogy-expert-logic': { axis: "Expert Analogy", text: "Researchers compare it to compound interest—small early moves yield outsized returns.", vehicle: 'analogy', voice: 'expert' }
+      }
+    };
+    
+    // Style state - simpler
+    let selectedVoice = 'auto';
+    let selectedVehicle = 'auto';
+    
+    function selectStyling(type, value, element) {
+      // Update state
+      if (type === 'voice') selectedVoice = value;
+      if (type === 'vehicle') selectedVehicle = value;
+      
+      // Update UI - deselect siblings, select this
+      element.parentElement.querySelectorAll('.styling-pill').forEach(p => p.classList.remove('active'));
+      element.classList.add('active');
+    }
+    
+    function generateReframes() {
+      allReframes = [];
+      selectedReframes = [];
+      
+      const baseReframes = selectedTechnique.reframes || [];
+      const techMatrix = matrixReframes[selectedTechnique.name] || {};
+      
+      // Build full pool from base + matrix
+      let fullPool = [...baseReframes];
+      for (const [key, reframe] of Object.entries(techMatrix)) {
+        const exists = fullPool.some(r => r.text === reframe.text);
+        if (!exists) fullPool.push(reframe);
+      }
+      
+      // Separate into matching and non-matching
+      let matching = [];
+      let nonMatching = [];
+      
+      fullPool.forEach(r => {
+        const voiceMatch = selectedVoice === 'auto' || r.voice === selectedVoice;
+        const vehicleMatch = selectedVehicle === 'auto' || r.vehicle === selectedVehicle;
+        
+        if (voiceMatch && vehicleMatch) {
+          matching.push(r);
+        } else {
+          nonMatching.push(r);
+        }
+      });
+      
+      // Prioritize matching, then fill with non-matching to get 4-6
+      allReframes = [...matching];
+      
+      // If we need more, add from non-matching
+      const minReframes = 4;
+      if (allReframes.length < minReframes) {
+        const needed = minReframes - allReframes.length;
+        allReframes = [...allReframes, ...nonMatching.slice(0, needed)];
+      }
+      
+      // Cap at 6
+      allReframes = allReframes.slice(0, 6);
+      
+      document.getElementById('resultTechniqueBadge').textContent = selectedTechnique.name;
+      buildReframeOptions();
+      updateSelectionCount();
+      goToScreen('4b');
+    }
+    
+    function regenerateReframes() {
+      // Add more from matrix if available
+      const techMatrix = matrixReframes[selectedTechnique.name] || {};
+      let added = 0;
+      
+      for (const [key, reframe] of Object.entries(techMatrix)) {
+        const exists = allReframes.some(r => r.text === reframe.text);
+        if (!exists) {
+          allReframes.push({ ...reframe, isNew: true });
+          added++;
+          if (added >= 2) break;
+        }
+      }
+      
+      if (added === 0) {
+        alert('No more variations available.');
+      } else {
+        buildReframeOptions();
+      }
+    }
     
     // Initialize
     document.getElementById('messageInput').addEventListener('input', function() {
@@ -1847,7 +2497,6 @@
       });
     });
     
-    // Mode selection
     function selectMode(mode) {
       selectedMode = mode;
       document.getElementById('modeDiagnose').classList.toggle('selected', mode === 'diagnose');
@@ -1863,7 +2512,6 @@
       }
     }
     
-    // Analyze
     function analyzeMessage() {
       goToScreen('1b');
       setTimeout(() => {
@@ -1877,7 +2525,6 @@
       }, 1500);
     }
     
-    // Technique cards
     function buildTechniqueCards(cause) {
       const techList = techniques[cause] || techniques['identity_threat'];
       const container = document.getElementById('techniqueCards');
@@ -1909,14 +2556,13 @@
       });
     }
     
-    // Build family lists
-    function buildFamilyList(containerId, onclick) {
-      const container = document.getElementById(containerId);
+    function buildLearnFamilyList() {
+      const container = document.getElementById('learnFamilyList');
       container.innerHTML = '';
       families.forEach(f => {
         const card = document.createElement('div');
         card.className = 'family-card';
-        card.onclick = () => onclick(f);
+        card.onclick = () => showLearnFamily(f);
         card.innerHTML = `
           <div class="family-info">
             <div class="family-name">${f.name}</div>
@@ -1926,10 +2572,6 @@
         `;
         container.appendChild(card);
       });
-    }
-    
-    function buildLearnFamilyList() {
-      buildFamilyList('learnFamilyList', showLearnFamily);
     }
     
     function showLearnFamily(family) {
@@ -1957,7 +2599,6 @@
       document.getElementById('techDetailName').textContent = tech.name;
       document.getElementById('techDetailWhen').textContent = tech.when;
       document.getElementById('techDetailDef').textContent = tech.def;
-      document.getElementById('techDetailExample').textContent = '"Example reframe using ' + tech.name + '..."';
       goToScreen('7c');
     }
     
@@ -1965,19 +2606,26 @@
       alert('This would take you to Diagnose mode with ' + currentTechDetail.name + ' pre-selected.');
     }
     
-    // Select technique
     function selectTechnique(tech, cause) {
       selectedTechnique = tech;
       selectedReframes = [];
-      generatedCount = 0;
-      allReframes = [...tech.reframes];
-      document.getElementById('selectedTechniqueBadge').textContent = tech.name;
-      buildReframeOptions();
-      updateSelectionCount();
+      selectedVoice = 'auto';
+      selectedVehicle = 'auto';
+      allReframes = [];
+      
+      // Reset styling pills to "You choose"
+      document.querySelectorAll('.styling-pill').forEach(p => {
+        p.classList.toggle('active', p.dataset.value === 'auto');
+      });
+      
+      // Populate primary technique card
+      document.getElementById('primaryTechniqueName').textContent = tech.name;
+      document.getElementById('primaryTechniqueScore').textContent = tech.score + '%';
+      document.getElementById('primaryTechniqueDesc').textContent = tech.description;
+      
       goToScreen(4);
     }
     
-    // Reframe options
     function buildReframeOptions() {
       const container = document.getElementById('reframeOptions');
       container.innerHTML = '';
@@ -1987,14 +2635,15 @@
         option.className = 'reframe-option' + (selectedReframes.find(r => r.index === index) ? ' selected' : '');
         option.dataset.index = index;
         option.onclick = () => toggleReframe(index, item, option);
+        
+        // Simple label based on axis or generate one
+        const label = item.axis || `Option ${index + 1}`;
+        
         option.innerHTML = `
           <div class="reframe-checkbox">
             <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <div class="reframe-header">
-            <div class="reframe-axis">${item.axis}</div>
-            ${item.isNew ? '<span class="badge new">New</span>' : ''}
-          </div>
+          <div class="reframe-label">${label}${item.isNew ? ' · NEW' : ''}</div>
           <div class="reframe-text">${item.text}</div>
         `;
         container.appendChild(option);
@@ -2015,11 +2664,10 @@
     
     function updateSelectionCount() {
       document.getElementById('selectionCount').textContent = selectedReframes.length;
-      document.getElementById('btnTest').disabled = selectedReframes.length === 0;
-      document.getElementById('btnSkipTest').disabled = selectedReframes.length === 0;
+      // Need at least 2 for A/B testing
+      document.getElementById('btnTest').disabled = selectedReframes.length < 2;
     }
     
-    // Generate more reframes
     function generateMoreReframes() {
       const additional = additionalReframes[selectedTechnique.name] || [];
       const toAdd = additional.slice(generatedCount, generatedCount + 2);
@@ -2032,7 +2680,6 @@
       buildReframeOptions();
     }
     
-    // Testing
     function runTest() {
       const audience = document.getElementById('audienceInput').value || 'General audience';
       document.getElementById('testingAudience').textContent = audience;
@@ -2046,7 +2693,7 @@
         </div>
       `).join('');
       
-      goToScreen('4b');
+      goToScreen('4c');
       
       let completed = 0;
       const interval = setInterval(() => {
@@ -2064,14 +2711,60 @@
     }
     
     function generateResults() {
-      testResults = selectedReframes.map(r => ({
-        ...r,
-        overall: 60 + Math.floor(Math.random() * 30),
-        clarity: 50 + Math.floor(Math.random() * 45),
-        resonance: 50 + Math.floor(Math.random() * 45),
-        lowThreat: 50 + Math.floor(Math.random() * 45),
-        differentiation: 50 + Math.floor(Math.random() * 45)
-      }));
+      // Reasoning templates based on scores
+      const reasonings = {
+        highClarity: "Clear, concrete language. No jargon. Easy to understand in one read.",
+        lowClarity: "Could be simpler. Some abstract terms might slow comprehension.",
+        highResonance: "Strong alignment with audience values and priorities.",
+        lowResonance: "May not connect to what this audience cares about most.",
+        highThreat: "Positions audience positively. No implied criticism.",
+        lowThreat: "Could feel slightly accusatory or create defensiveness.",
+        highDiff: "Distinct framing. Hard for competitors to copy or undermine.",
+        lowDiff: "Generic enough that others could say the same thing."
+      };
+      
+      testResults = selectedReframes.map(r => {
+        const clarity = 50 + Math.floor(Math.random() * 45);
+        const resonance = 50 + Math.floor(Math.random() * 45);
+        const lowThreat = 50 + Math.floor(Math.random() * 45);
+        const differentiation = 50 + Math.floor(Math.random() * 45);
+        const overall = Math.round((clarity + resonance + lowThreat + differentiation) / 4);
+        
+        // Generate reasoning based on weakest score
+        const scores = {clarity, resonance, lowThreat, differentiation};
+        const weakest = Object.entries(scores).sort((a,b) => a[1] - b[1])[0];
+        const strongest = Object.entries(scores).sort((a,b) => b[1] - a[1])[0];
+        
+        let reasoning = '';
+        if (strongest[1] >= 80) {
+          reasoning = strongest[0] === 'clarity' ? reasonings.highClarity :
+                     strongest[0] === 'resonance' ? reasonings.highResonance :
+                     strongest[0] === 'lowThreat' ? reasonings.highThreat :
+                     reasonings.highDiff;
+        }
+        if (weakest[1] < 65) {
+          reasoning += (reasoning ? ' ' : '') + (
+            weakest[0] === 'clarity' ? reasonings.lowClarity :
+            weakest[0] === 'resonance' ? reasonings.lowResonance :
+            weakest[0] === 'lowThreat' ? reasonings.lowThreat :
+            reasonings.lowDiff
+          );
+        }
+        if (!reasoning) {
+          reasoning = "Balanced across all dimensions. Solid overall performance.";
+        }
+        
+        return {
+          ...r,
+          overall,
+          clarity,
+          resonance,
+          lowThreat,
+          differentiation,
+          reasoning
+        };
+      });
+      
       testResults.sort((a, b) => b.overall - a.overall);
       winnerReframe = testResults[0];
       
@@ -2080,13 +2773,13 @@
       testResults.forEach((r, index) => {
         const isWinner = index === 0;
         const card = document.createElement('div');
-        card.className = 'result-card' + (isWinner ? ' winner' : ' collapsed');
+        card.className = 'result-card' + (isWinner ? ' winner' : '');
         card.innerHTML = `
           ${isWinner ? '<div class="winner-label">🏆 Winner</div>' : ''}
           <div class="result-header">
             <div class="result-rank">
               <div class="rank-badge">${index + 1}</div>
-              <div class="result-axis">${r.axis}</div>
+              <div class="result-axis">${r.axis || 'Option ' + (index + 1)}</div>
             </div>
             <div class="result-score">
               <div class="result-score-value">${r.overall}%</div>
@@ -2094,6 +2787,7 @@
             </div>
           </div>
           <div class="result-text">${r.text}</div>
+          <div class="result-reasoning">${r.reasoning}</div>
           <div class="result-metrics">
             <div class="metric"><span class="metric-label">Clarity</span><span class="metric-value">${r.clarity}%</span></div>
             <div class="metric"><span class="metric-label">Resonance</span><span class="metric-value">${r.resonance}%</span></div>
@@ -2124,21 +2818,17 @@
       goToScreen(6);
     }
     
-    // Learn mode tabs
-    function setLearnTab(tab) {
+    function setLearnTab(tab, btn) {
       currentLearnTab = tab;
       document.querySelectorAll('.learn-nav-btn').forEach(b => b.classList.remove('active'));
-      event.target.classList.add('active');
+      btn.classList.add('active');
       document.getElementById('learnBrowse').style.display = tab === 'browse' ? 'block' : 'none';
       document.getElementById('learnFlashcards').style.display = tab === 'flashcards' ? 'block' : 'none';
       document.getElementById('learnCases').style.display = tab === 'cases' ? 'block' : 'none';
       
-      if (tab === 'flashcards') {
-        updateFlashcard();
-      }
+      if (tab === 'flashcards') updateFlashcard();
     }
     
-    // Flashcards
     function updateFlashcard() {
       const tech = allTechniques[currentCardIndex];
       document.getElementById('flashcardTitle').textContent = tech.name;
@@ -2165,25 +2855,26 @@
       updateFlashcard();
     }
     
-    function showCaseDetail(index) {
-      alert('Case study detail view coming soon!');
-    }
-    
-    // Navigation
     function goToScreen(index) {
-      const stringScreens = ['1b', '4b', '3b', '3c', '7b', '7c'];
+      const stringScreens = ['landing', 'intro1', 'intro2', 'intro3', '1b', '4b', '4c', '3b', '3c', '7b', '7c'];
+      const hideUI = ['landing', 'intro1', 'intro2', 'intro3'].includes(index);
+      
+      document.getElementById('header').classList.toggle('hidden', hideUI);
+      document.getElementById('progressBar').classList.toggle('hidden', hideUI);
+      
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      
       if (stringScreens.includes(index)) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById('screen' + index).classList.add('active');
+        const screenId = 'screen' + index.charAt(0).toUpperCase() + index.slice(1);
+        document.getElementById(screenId).classList.add('active');
         return;
       }
       
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById('screen' + index).classList.add('active');
       currentScreen = index;
       updateProgress();
       
-      const labelMap = {0: 'Start', 1: 'Intake', 2: 'Diagnosis', 3: 'Techniques', 4: 'Reframes', 5: 'Results', 6: 'Done', 7: 'Learn'};
+      const labelMap = {0: 'Start', 1: 'Intake', 2: 'Diagnosis', 3: 'Techniques', 4: 'Style', 5: 'Results', 6: 'Done', 7: 'Learn'};
       document.getElementById('screenLabel').textContent = labelMap[index] || '';
     }
     
@@ -2217,7 +2908,6 @@
     }
     
     // Init
-    updateProgress();
     buildLearnFamilyList();
   </script>
 </body>
